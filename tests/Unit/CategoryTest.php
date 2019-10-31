@@ -11,10 +11,10 @@ use Tests\TestCase;
 
 class CategoryTest extends TestCase {
 
-   // use DatabaseMigrations;
+    use DatabaseMigrations;
 
     public function testIfUseTraits() {
-       // Genre::create(['nome' => 'teste']);
+        Genre::create(['name' => 'teste']);
         $traits = [
             SoftDeletes::class, Uuid::class
         ];

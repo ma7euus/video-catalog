@@ -7,17 +7,13 @@
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/ca.pem" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/client-cert.pem" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/client-key.pem" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/categories.frm" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/categories.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/categories.frm" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/categories.frm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/categories.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/categories.ibd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/db.opt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/failed_jobs.frm" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/failed_jobs.ibd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/migrations.frm" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/migrations.ibd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/password_resets.frm" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/password_resets.ibd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/users.frm" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/users.ibd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/failed_jobs.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/failed_jobs.ibd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/migrations.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/migrations.ibd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/password_resets.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/password_resets.ibd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/users.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/code_micro_videos/users.ibd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/ib_buffer_pool" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/ib_logfile0" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/ib_logfile0" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/ibdata1" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/ibdata1" afterDir="false" />
@@ -36,11 +32,13 @@
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/mysql/innodb_index_stats.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/mysql/innodb_index_stats.ibd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/mysql/innodb_table_stats.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/mysql/innodb_table_stats.ibd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/mysql/ndb_binlog_index.MYI" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/mysql/ndb_binlog_index.MYI" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.docker/dbdata/mysql/plugin.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/mysql/plugin.ibd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/mysql/proc.MYD" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/mysql/proc.MYD" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/mysql/proc.MYI" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/mysql/proc.MYI" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/mysql/procs_priv.MYI" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/mysql/procs_priv.MYI" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/mysql/proxies_priv.MYI" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/mysql/proxies_priv.MYI" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/mysql/server_cost.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/mysql/server_cost.ibd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.docker/dbdata/mysql/servers.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/mysql/servers.ibd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/mysql/slave_master_info.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/mysql/slave_master_info.ibd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/mysql/slave_relay_log_info.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/mysql/slave_relay_log_info.ibd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/mysql/slave_worker_info.ibd" beforeDir="false" afterPath="$PROJECT_DIR$/.docker/dbdata/mysql/slave_worker_info.ibd" afterDir="false" />
@@ -164,7 +162,8 @@
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/sys/x@0024waits_by_host_by_latency.frm" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/sys/x@0024waits_by_user_by_latency.frm" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.docker/dbdata/sys/x@0024waits_global_by_latency.frm" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -172,7 +171,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution>
       <executable />
@@ -281,7 +280,10 @@
       <path value="$PROJECT_DIR$/vendor/doctrine/instantiator" />
     </include_path>
   </component>
+  <component name="ProjectId" id="1Szu9mQEUf3G5H56r5BWu4LdqF5" />
   <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="nodejs_package_manager_path" value="yarn" />
     <property name="settings.editor.selected.configurable" value="reference.webide.settings.project.settings.php" />
   </component>
   <component name="RunDashboard">
@@ -296,9 +298,13 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="PHPUnit.CategoryTest">
     <configuration name="CategoryTest" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" temporary="true">
       <TestRunner class="Tests\Unit\CategoryTest" file="$PROJECT_DIR$/tests/Unit/CategoryTest.php" scope="Class" />
+      <method v="2" />
+    </configuration>
+    <configuration name="phpunit.xml" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner scope="XML" />
       <method v="2" />
     </configuration>
     <recent_temporary>
@@ -327,7 +333,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1572572349246</updated>
-      <workItem from="1572572357796" duration="1618000" />
+      <workItem from="1572572357796" duration="3649000" />
+      <workItem from="1572578600197" duration="567000" />
     </task>
     <task id="LOCAL-00001" summary="a">
       <created>1572573895468</created>
@@ -336,7 +343,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572573895468</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="a">
+      <created>1572574082659</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1572574082659</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -347,7 +361,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

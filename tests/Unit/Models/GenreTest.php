@@ -2,49 +2,48 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\Category;
+use App\Models\Genre;
 use App\Models\Traits\Uuid;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Tests\TestCase;
 
-class CategoryTest extends TestCase {
-
+class GenreTest extends TestCase {
     /**
-     * @var Category
+     * @var Genre
      */
-    private $category;
+    private $genre;
 
     protected function setUp(): void {
         parent::setUp();
-        $this->category = new Category();
+        $this->genre = new Genre();
     }
 
     public function testIfUseTraits() {
         $traits = [
             SoftDeletes::class, Uuid::class
         ];
-        $categoryTraits = array_keys(class_uses(get_class($this->category)));
+        $categoryTraits = array_keys(class_uses(get_class($this->genre)));
         $this->assertEquals($traits, $categoryTraits);
     }
 
     public function testFillableAttribute() {
-        $fillable = ['name', 'description', 'is_active'];
-        $this->assertEquals($fillable, $this->category->getFillable());
+        $fillable = ['name', 'is_active'];
+        $this->assertEquals($fillable, $this->genre->getFillable());
     }
 
     public function testCastsAttribute() {
         $casts = ['id' => 'string', 'is_active' => 'boolean'];
-        $this->assertEquals($casts, $this->category->getCasts());
+        $this->assertEquals($casts, $this->genre->getCasts());
     }
 
     public function testDatesAttribute() {
         $dates = ['deleted_at', 'created_at', 'updated_at'];
-        $categoryDates = $this->category->getDates();
-        $this->assertEqualsCanonicalizing($dates, $categoryDates);
-        $this->assertCount(count($dates), $categoryDates);
+        $genreDates = $this->genre->getDates();
+        $this->assertEqualsCanonicalizing($dates, $genreDates);
+        $this->assertCount(count($dates), $genreDates);
     }
 
     public function testIncrementingAttribute() {
-        $this->assertEquals(false, $this->category->getIncrementing());
+        $this->assertEquals(false, $this->genre->getIncrementing());
     }
 }

@@ -6,7 +6,7 @@
 /.env
 /.docker/dbdata
 .docker/dbdata
-.docker/dbdata/*
+/dbdata
 .env.testing
 .env.backup
 .phpunit.result.cache
@@ -17,3 +17,5 @@ yarn-error.log
 _ide_helper.php
 _ide_helper_models.php
 .phpstorm.meta.php
+/.idea
+/.idea/workspace.xml

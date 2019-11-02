@@ -6,6 +6,7 @@
 /.env
 /.docker/dbdata
 .docker/dbdata
+.docker/dbdata/*
 .env.testing
 .env.backup
 .phpunit.result.cache

@@ -1,50 +1,51 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Models;
 
 use App\Models\Category;
-use App\Models\Genre;
 use App\Models\Traits\Uuid;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class CategoryTest extends TestCase {
 
-    use DatabaseMigrations;
+    /**
+     * @var Category
+     */
+    private $category;
+
+    protected function setUp(): void {
+        parent::setUp();
+        $this->category = new Category();
+    }
 
     public function testIfUseTraits() {
-        Genre::create(['name' => 'teste']);
         $traits = [
             SoftDeletes::class, Uuid::class
         ];
-        $categoryTraits = array_keys(class_uses(Category::class));
+        $categoryTraits = array_keys(class_uses(get_class($this->category)));
         $this->assertEquals($traits, $categoryTraits);
     }
 
     public function testFillableAttribute() {
         $fillable = ['name', 'description', 'is_active'];
-        $category = new Category();
-        $this->assertEquals($fillable, $category->getFillable());
+        $this->assertEquals($fillable, $this->category->getFillable());
     }
 
     public function testCastsAttribute() {
         $casts = ['id' => 'string'];
-        $category = new Category();
-        $this->assertEquals($casts, $category->getCasts());
+        $this->assertEquals($casts, $this->category->getCasts());
     }
 
     public function testDatesAttribute() {
         $dates = ['deleted_at', 'created_at', 'updated_at'];
-        $category = new Category();
         foreach ($dates as $date) {
-            $this->assertContains($date, $category->getDates());
+            $this->assertContains($date, $this->category->getDates());
         }
-        $this->assertCount(count($dates), $category->getDates());
+        $this->assertCount(count($dates), $this->category->getDates());
     }
 
     public function testIncrementingAttribute() {
-        $category = new Category();
-        $this->assertEquals(false, $category->getIncrementing());
+        $this->assertEquals(false, $this->category->getIncrementing());
     }
 }

@@ -28,6 +28,10 @@ steps:
     name: "gcr.io/cloud-builders/docker"
     args: ['exec', '-t', 'app', 'php', '/var/www/artisan', 'key:generate']
 
+  - id: "Acessando DB"
+    name: "gcr.io/cloud-builders/docker"
+    args: ['exec', '-t', 'db', 'ls']
+
   - id: "Rodando migrations"
     name: "gcr.io/cloud-builders/docker"
     args: ['exec', '-t', 'app', 'php', '/var/www/artisan', 'migrate']

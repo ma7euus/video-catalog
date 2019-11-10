@@ -24,13 +24,13 @@ steps:
     name: "gcr.io/cloud-builders/docker"
     args: ['exec', '-t', 'app', 'cat', '.env']
 
-  - id: "Listando containers"
-    name: "gcr.io/cloud-builders/docker"
-    args: ['ps', '-a']
-
   - id: "Rodando key:generate"
     name: "gcr.io/cloud-builders/docker"
     args: ['exec', '-t', 'app', 'php', '/var/www/artisan', 'key:generate']
+
+  - id: "PING DB"
+    name: "gcr.io/cloud-builders/docker"
+    args: ['exec', '-t', 'app', 'ping', 'db']
 
   - id: "Rodando migrations"
     name: "gcr.io/cloud-builders/docker"

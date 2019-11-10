@@ -30,7 +30,7 @@ steps:
 
   - id: "Acessando DB"
     name: "gcr.io/cloud-builders/docker"
-    args: ['logs']
+    args: ['logs', 'db']
 
   - id: "Rodando migrations"
     name: "gcr.io/cloud-builders/docker"

@@ -6,11 +6,11 @@ steps:
 
   - id: "Rodando composer"
     name: "gcr.io/cloud-builders/docker"
-    args: ['exec', '-t', 'app', 'composer', 'install']
+    args: ['exec', '-t', 'micro-videos-app', 'composer', 'install']
 
   - id: "Copiando .env"
     name: "gcr.io/cloud-builders/docker"
-    args: ['exec', '-t', 'app', 'cp', '.env.example', '.env']
+    args: ['exec', '-t', 'micro-videos-app', 'cp', '.env.example', '.env']
 
   - id: "Copiando .env.testing"
     name: "gcr.io/cloud-builders/docker"
@@ -22,8 +22,8 @@ steps:
 
   - id: "Rodando migrations"
     name: "gcr.io/cloud-builders/docker"
-    args: ['exec', '-t', 'app', 'php', '/var/www/artisan', 'migrate']
+    args: ['exec', '-t', 'micro-videos-app', 'php', '/var/www/artisan', 'migrate']
 
   - id: "Rodando Phpunit"
     name: "gcr.io/cloud-builders/docker"
-    args: ['exec', '-t', 'app', 'php', '/var/www/vendor/bin/phpunit', '-c', '/var/www/phpunit.xml']
+    args: ['exec', '-t', 'micro-videos-app', 'php', '/var/www/vendor/bin/phpunit', '-c', '/var/www/phpunit.xml']

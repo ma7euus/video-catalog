@@ -6,10 +6,11 @@ use App\Models\Genre;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestResponse;
 use Tests\TestCase;
+use Tests\Traits\TestValidations;
 
 class GenreControllerTest extends TestCase {
 
-    use DatabaseMigrations;
+    use DatabaseMigrations, TestValidations;
 
     /**
      * A basic feature test example.
@@ -36,15 +37,20 @@ class GenreControllerTest extends TestCase {
 
     public function testInvalidationData() {
 
-        $response = $this->json('POST', route('genres.store', []));
-        $this->assertInvalidationRequired($response);
+        $data = [
+            'name' => ''
+        ];
+        $this->assertInvalidationInStoreAction($data, 'required');
 
-        $response = $this->json('POST', route('genres.store', [
+        $data = [
             'name' => str_repeat('a', 256),
+        ];
+        $this->assertInvalidationInStoreAction($data, 'max.string', ['max' => 255]);
+
+        $data = [
             'is_active' => 'a'
-        ]));
-        $this->assertInvalidationMax($response);
-        $this->assertInvalidationBoolean($response);
+        ];
+        $this->assertInvalidationInStoreAction($data, 'boolean');
 
         /** @var Genre $genre */
         $genre = factory(Genre::class)->create();
@@ -66,28 +72,16 @@ class GenreControllerTest extends TestCase {
     }
 
     protected function assertInvalidationRequired(TestResponse $response) {
-        $response->assertStatus(422)
-            ->assertJsonValidationErrors(['name'])
-            ->assertJsonMissingValidationErrors(['is_active'])
-            ->assertJsonFragment([
-                \Lang::get('validation.required', ['attribute' => 'name'])
-            ]);
+        $this->assertInvalidationFields($response, ['name'], 'required');
+        $response->assertJsonMissingValidationErrors(['is_active']);
     }
 
     protected function assertInvalidationMax(TestResponse $response) {
-        $response->assertStatus(422)
-            ->assertJsonValidationErrors(['name'])
-            ->assertJsonFragment([
-                \Lang::get('validation.max.string', ['attribute' => 'name', 'max' => 255])
-            ]);
+        $this->assertInvalidationFields($response, ['name'], 'max.string', ['max' => 255]);
     }
 
     protected function assertInvalidationBoolean(TestResponse $response) {
-        $response->assertStatus(422)
-            ->assertJsonValidationErrors(['is_active'])
-            ->assertJsonFragment([
-                \Lang::get('validation.boolean', ['attribute' => 'is active'])
-            ]);
+        $this->assertInvalidationFields($response, ['is_active'], 'boolean');
     }
 
     public function testStore() {
@@ -145,5 +139,9 @@ class GenreControllerTest extends TestCase {
         $response->assertStatus(204);
         $this->assertNull(Genre::find($genre->id));
         $this->assertNotNull(Genre::withTrashed()->find($genre->id));
+    }
+
+    protected function routeStore() {
+        return route('genres.store');
     }
 }

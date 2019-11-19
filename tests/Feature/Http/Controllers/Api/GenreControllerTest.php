@@ -124,4 +124,11 @@ class GenreControllerTest extends TestCase {
     protected function routeUpdate() {
         return route('genres.update', ['genre' => $this->genre->id]);
     }
+
+    /**
+     * @return Genre
+     */
+    protected function model() {
+        return get_class($this->genre);
+    }
 }

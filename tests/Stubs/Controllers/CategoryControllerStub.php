@@ -3,13 +3,17 @@
 namespace Tests\Stubs\Controllers;
 
 use App\Http\Controllers\Api\BasicCrudController;
-use Illuminate\Database\Eloquent\Model;
 use Tests\Stubs\Models\CategoryStub;
 
 class CategoryControllerStub extends BasicCrudController {
 
+    protected $validationRules = [
+        'name' => 'required|max:255',
+        'description' => 'nullable'
+    ];
+
     /**
-     * @return Model
+     * @return CategoryStub
      */
     protected function model() {
         return CategoryStub::class;
@@ -19,9 +23,10 @@ class CategoryControllerStub extends BasicCrudController {
      * @return array
      */
     protected function rulesStore() {
-        return [
-            'name' => 'required|max:255',
-            'description' => 'nullable'
-        ];
+        return $this->validationRules;
+    }
+
+    protected function rulesUpdate() {
+        return $this->validationRules;
     }
 }

@@ -2,39 +2,27 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\Genre;
-use Illuminate\Http\Request;
 
-class GenreController extends Controller {
-    private $rules = [
+class GenreController extends BasicCrudController {
+
+    protected $validationRules = [
         'name' => 'required|max:255',
-        'is_active' => 'boolean',
+        'is_active' => 'boolean'
     ];
 
-    public function index() {
-        return Genre::all();
+    /**
+     * @return Genre
+     */
+    protected function model() {
+        return Genre::class;
     }
 
-    public function store(Request $request) {
-        $this->validate($request, $this->rules);
-        $genre = Genre::create($request->all());
-        $genre->refresh();
-        return $genre;
+    protected function rulesStore() {
+        return $this->validationRules;
     }
 
-    public function show(Genre $genre) {
-        return $genre;
-    }
-
-    public function update(Request $request, Genre $genre) {
-        $this->validate($request, $this->rules);
-        $genre->update($request->all());
-        return $genre;
-    }
-
-    public function destroy(Genre $genre) {
-        $genre->delete();
-        return response()->noContent();
+    protected function rulesUpdate() {
+        return $this->validationRules;
     }
 }

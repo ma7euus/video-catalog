@@ -2,20 +2,20 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\Genre;
+use App\Models\GenreStub;
 use App\Models\Traits\Uuid;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Tests\TestCase;
 
 class GenreTest extends TestCase {
     /**
-     * @var Genre
+     * @var GenreStub
      */
     private $genre;
 
     protected function setUp(): void {
         parent::setUp();
-        $this->genre = new Genre();
+        $this->genre = new GenreStub();
     }
 
     public function testIfUseTraits() {

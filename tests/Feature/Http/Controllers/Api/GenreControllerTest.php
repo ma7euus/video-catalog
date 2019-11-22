@@ -2,24 +2,24 @@
 
 namespace Tests\Feature\Http\Controllers\Api;
 
-use App\Models\Genre;
+use App\Models\GenreStub;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\TestResponse;
 use Tests\TestCase;
+use Tests\Traits\TestController;
 use Tests\Traits\TestValidations;
 
 class GenreControllerTest extends TestCase {
 
-    use DatabaseMigrations, TestValidations;
+    use DatabaseMigrations, TestController, TestValidations;
 
     /**
-     * @var Genre
+     * @var GenreStub
      */
     private $genre;
 
     protected function setUp(): void {
         parent::setUp();
-        $this->genre = factory(Genre::class)->create();
+        $this->genre = factory(GenreStub::class)->create();
     }
 
     /**
@@ -68,7 +68,7 @@ class GenreControllerTest extends TestCase {
         ]);
 
         $id = $response->json('id');
-        $genre = Genre::find($id);
+        $genre = GenreStub::find($id);
 
         $response->assertStatus(201)
             ->assertJson($genre->toArray());
@@ -92,7 +92,7 @@ class GenreControllerTest extends TestCase {
 
     public function testUpdate() {
 
-        $genre = factory(Genre::class)->create([
+        $genre = factory(GenreStub::class)->create([
             'is_active' => false
         ]);
         $response = $this->json('PUT', route('genres.update', ['genre' => $genre->id]), [
@@ -101,7 +101,7 @@ class GenreControllerTest extends TestCase {
         ]);
 
         $id = $response->json('id');
-        $genre = Genre::find($id);
+        $genre = GenreStub::find($id);
 
         $response->assertStatus(200)
             ->assertJson($genre->toArray())
@@ -113,20 +113,26 @@ class GenreControllerTest extends TestCase {
     public function testDestroy() {
         $response = $this->json('DELETE', route('genres.destroy', ['genre' => $this->genre->id]));
         $response->assertStatus(204);
-        $this->assertNull(Genre::find($this->genre->id));
-        $this->assertNotNull(Genre::withTrashed()->find($this->genre->id));
+        $this->assertNull(GenreStub::find($this->genre->id));
+        $this->assertNotNull(GenreStub::withTrashed()->find($this->genre->id));
     }
 
+    /**
+     * @return string
+     */
     protected function routeStore() {
         return route('genres.store');
     }
 
+    /**
+     * @return string
+     */
     protected function routeUpdate() {
         return route('genres.update', ['genre' => $this->genre->id]);
     }
 
     /**
-     * @return Genre
+     * @return GenreStub
      */
     protected function model() {
         return get_class($this->genre);

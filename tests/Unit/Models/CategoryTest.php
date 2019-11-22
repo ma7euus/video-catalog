@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\Category;
+use App\Models\CategoryStub;
 use App\Models\Traits\Uuid;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Tests\TestCase;
@@ -10,13 +10,13 @@ use Tests\TestCase;
 class CategoryTest extends TestCase {
 
     /**
-     * @var Category
+     * @var CategoryStub
      */
     private $category;
 
     protected function setUp(): void {
         parent::setUp();
-        $this->category = new Category();
+        $this->category = new CategoryStub();
     }
 
     public function testIfUseTraits() {

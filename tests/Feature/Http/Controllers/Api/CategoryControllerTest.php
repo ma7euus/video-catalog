@@ -2,25 +2,26 @@
 
 namespace Tests\Feature\Http\Controllers\Api;
 
-use App\Models\Category;
+use App\Models\CategoryStub;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestResponse;
 use Tests\TestCase;
+use Tests\Traits\TestController;
 use Tests\Traits\TestSaves;
 use Tests\Traits\TestValidations;
 
 class CategoryControllerTest extends TestCase {
 
-    use DatabaseMigrations, TestValidations, TestSaves;
+    use DatabaseMigrations, TestController, TestValidations, TestSaves;
 
     /**
-     * @var Category
+     * @var CategoryStub
      */
     private $category;
 
     protected function setUp(): void {
         parent::setUp();
-        $this->category = factory(Category::class)->create();
+        $this->category = factory(CategoryStub::class)->create();
     }
 
     /**
@@ -82,7 +83,7 @@ class CategoryControllerTest extends TestCase {
 
     public function testUpdate() {
 
-        $this->category = factory(Category::class)->create([
+        $this->category = factory(CategoryStub::class)->create([
             'is_active' => false,
             'description' => 'description'
         ]);
@@ -113,20 +114,26 @@ class CategoryControllerTest extends TestCase {
     public function testDestroy() {
         $response = $this->json('DELETE', route('categories.destroy', ['category' => $this->category->id]));
         $response->assertStatus(204);
-        $this->assertNull(Category::find($this->category->id));
-        $this->assertNotNull(Category::withTrashed()->find($this->category->id));
+        $this->assertNull(CategoryStub::find($this->category->id));
+        $this->assertNotNull(CategoryStub::withTrashed()->find($this->category->id));
     }
 
+    /**
+     * @return string
+     */
     protected function routeStore() {
         return route('categories.store');
     }
 
+    /**
+     * @return string
+     */
     protected function routeUpdate() {
         return route('categories.update', ['category' => $this->category->id]);
     }
 
     /**
-     * @return Category
+     * @return CategoryStub
      */
     protected function model() {
         return get_class($this->category);

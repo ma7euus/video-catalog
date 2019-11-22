@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\Api;
 
-use App\Models\CategoryStub;
+use App\Models\Category;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestResponse;
 use Tests\TestCase;
@@ -15,13 +15,13 @@ class CategoryControllerTest extends TestCase {
     use DatabaseMigrations, TestController, TestValidations, TestSaves;
 
     /**
-     * @var CategoryStub
+     * @var Category
      */
     private $category;
 
     protected function setUp(): void {
         parent::setUp();
-        $this->category = factory(CategoryStub::class)->create();
+        $this->category = factory(Category::class)->create();
     }
 
     /**
@@ -83,7 +83,7 @@ class CategoryControllerTest extends TestCase {
 
     public function testUpdate() {
 
-        $this->category = factory(CategoryStub::class)->create([
+        $this->category = factory(Category::class)->create([
             'is_active' => false,
             'description' => 'description'
         ]);
@@ -114,8 +114,8 @@ class CategoryControllerTest extends TestCase {
     public function testDestroy() {
         $response = $this->json('DELETE', route('categories.destroy', ['category' => $this->category->id]));
         $response->assertStatus(204);
-        $this->assertNull(CategoryStub::find($this->category->id));
-        $this->assertNotNull(CategoryStub::withTrashed()->find($this->category->id));
+        $this->assertNull(Category::find($this->category->id));
+        $this->assertNotNull(Category::withTrashed()->find($this->category->id));
     }
 
     /**
@@ -133,7 +133,7 @@ class CategoryControllerTest extends TestCase {
     }
 
     /**
-     * @return CategoryStub
+     * @return Category
      */
     protected function model() {
         return get_class($this->category);

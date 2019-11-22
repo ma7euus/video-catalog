@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\Api;
 
-use App\Models\GenreStub;
+use App\Models\Genre;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 use Tests\Traits\TestController;
@@ -13,13 +13,13 @@ class GenreControllerTest extends TestCase {
     use DatabaseMigrations, TestController, TestValidations;
 
     /**
-     * @var GenreStub
+     * @var Genre
      */
     private $genre;
 
     protected function setUp(): void {
         parent::setUp();
-        $this->genre = factory(GenreStub::class)->create();
+        $this->genre = factory(Genre::class)->create();
     }
 
     /**
@@ -68,7 +68,7 @@ class GenreControllerTest extends TestCase {
         ]);
 
         $id = $response->json('id');
-        $genre = GenreStub::find($id);
+        $genre = Genre::find($id);
 
         $response->assertStatus(201)
             ->assertJson($genre->toArray());
@@ -92,7 +92,7 @@ class GenreControllerTest extends TestCase {
 
     public function testUpdate() {
 
-        $genre = factory(GenreStub::class)->create([
+        $genre = factory(Genre::class)->create([
             'is_active' => false
         ]);
         $response = $this->json('PUT', route('genres.update', ['genre' => $genre->id]), [
@@ -101,7 +101,7 @@ class GenreControllerTest extends TestCase {
         ]);
 
         $id = $response->json('id');
-        $genre = GenreStub::find($id);
+        $genre = Genre::find($id);
 
         $response->assertStatus(200)
             ->assertJson($genre->toArray())
@@ -113,8 +113,8 @@ class GenreControllerTest extends TestCase {
     public function testDestroy() {
         $response = $this->json('DELETE', route('genres.destroy', ['genre' => $this->genre->id]));
         $response->assertStatus(204);
-        $this->assertNull(GenreStub::find($this->genre->id));
-        $this->assertNotNull(GenreStub::withTrashed()->find($this->genre->id));
+        $this->assertNull(Genre::find($this->genre->id));
+        $this->assertNotNull(Genre::withTrashed()->find($this->genre->id));
     }
 
     /**
@@ -132,7 +132,7 @@ class GenreControllerTest extends TestCase {
     }
 
     /**
-     * @return GenreStub
+     * @return Genre
      */
     protected function model() {
         return get_class($this->genre);

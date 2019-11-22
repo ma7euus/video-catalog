@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Models;
 
-use App\Models\GenreStub;
+use App\Models\Genre;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
@@ -16,8 +16,8 @@ class GenreTest extends TestCase {
      * @return void
      */
     public function testList() {
-        factory(GenreStub::class, 1)->create();
-        $genres = GenreStub::all();
+        factory(Genre::class, 1)->create();
+        $genres = Genre::all();
         $this->assertCount(1, $genres);
         $genreKey = array_keys($genres->first()->getAttributes());
         $this->assertEqualsCanonicalizing([
@@ -32,7 +32,7 @@ class GenreTest extends TestCase {
     }
 
     public function testCreate() {
-        $genre = GenreStub::create([
+        $genre = Genre::create([
             'name' => 'test1'
         ]);
         $genre->refresh();
@@ -41,13 +41,13 @@ class GenreTest extends TestCase {
         $this->assertEquals('test1', $genre->name);
         $this->assertTrue($genre->is_active);
 
-        $genre = GenreStub::create([
+        $genre = Genre::create([
             'name' => 'test1',
             'is_active' => false
         ]);
         $this->assertFalse($genre->is_active);
 
-        $genre = GenreStub::create([
+        $genre = Genre::create([
             'name' => 'test1',
             'is_active' => true
         ]);
@@ -55,8 +55,8 @@ class GenreTest extends TestCase {
     }
 
     public function testUpdate() {
-        /** @var GenreStub $genre */
-        $genre = factory(GenreStub::class)->create([
+        /** @var Genre $genre */
+        $genre = factory(Genre::class)->create([
             'name' => 'test_name',
             'is_active' => false
         ])->first();
@@ -73,12 +73,12 @@ class GenreTest extends TestCase {
     }
 
     public function testDelete() {
-        /**@var GenreStub $genre */
-        $genre = factory(GenreStub::class)->create();
+        /**@var Genre $genre */
+        $genre = factory(Genre::class)->create();
         $genre->delete();
-        $this->assertNull(GenreStub::find($genre->id));
+        $this->assertNull(Genre::find($genre->id));
 
         $genre->restore();
-        $this->assertNotNull(GenreStub::find($genre->id));
+        $this->assertNotNull(Genre::find($genre->id));
     }
 }

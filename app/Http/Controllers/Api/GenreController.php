@@ -11,6 +11,10 @@ class GenreController extends BasicCrudController {
         'is_active' => 'boolean'
     ];
 
+    public function __construct() {
+        parent::__construct();
+    }
+
     /**
      * @return Genre
      */

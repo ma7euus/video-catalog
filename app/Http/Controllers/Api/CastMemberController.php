@@ -11,6 +11,7 @@ class CastMemberController extends BasicCrudController {
     ];
 
     public function __construct() {
+        parent::__construct();
         $this->validationRules['type'] = 'required|in:' . implode(',', [CastMember::TYPE_DIRECTOR, CastMember::TYPE_ACTOR]);
     }
 

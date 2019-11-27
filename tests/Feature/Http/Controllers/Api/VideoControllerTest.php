@@ -43,32 +43,64 @@ class VideoControllerTest extends TestCase {
             ->assertJson($this->video->toArray());
     }
 
-    public function testInvalidationData() {
+    public function testInvalidationRequired() {
 
         $data = [
-            'name' => ''
+            'title' => '',
+            'description' => '',
+            'year_launched' => '',
+            'year_launched' => '',
+            'duration' => '',
+            'rating' => '',
         ];
         $this->assertInvalidationInStoreAction($data, 'required');
         $this->assertInvalidationInUpdateAction($data, 'required');
+    }
 
+    public function testInvalidationMax() {
         $data = [
-            'name' => str_repeat('a', 256),
+            'title' => str_repeat('a', 256),
         ];
         $this->assertInvalidationInStoreAction($data, 'max.string', ['max' => 255]);
         $this->assertInvalidationInUpdateAction($data, 'max.string', ['max' => 255]);
+    }
 
+    public function testInvalidationInteger() {
         $data = [
-            'is_active' => 'a'
+            'duration' => 'a'
+        ];
+        $this->assertInvalidationInStoreAction($data, 'integer');
+        $this->assertInvalidationInUpdateAction($data, 'integer');
+    }
+
+    public function testInvalidationBoolean() {
+        $data = [
+            'opened' => 'a'
         ];
         $this->assertInvalidationInStoreAction($data, 'boolean');
         $this->assertInvalidationInUpdateAction($data, 'boolean');
-
     }
 
-    public function testStore() {
+    public function testInvalidationYearLaunched() {
+        $data = [
+            'year_launched' => 'a'
+        ];
+        $this->assertInvalidationInStoreAction($data, 'date_format', ['format' => 'Y']);
+        $this->assertInvalidationInUpdateAction($data, 'date_format', ['format' => 'Y']);
+    }
 
-        $data = ['name' => 'test'];
-        /** @var TestResponse $response */
+    public function testInvalidationRating() {
+        $data = [
+            'rating' => 0
+        ];
+        $this->assertInvalidationInStoreAction($data, 'in');
+        $this->assertInvalidationInUpdateAction($data, 'in');
+    }
+    /*
+        public function testStore() {
+
+            $data = ['name' => 'test'];
+            /** @var TestResponse $response
         $response = $this->assertStore($data, $data + ['description' => null, 'is_active' => true, 'deleted_at' => null]);
         $response->assertJsonStructure([
             'created_at', 'updated_at'
@@ -116,7 +148,7 @@ class VideoControllerTest extends TestCase {
         $response->assertStatus(204);
         $this->assertNull(Video::find($this->video->id));
         $this->assertNotNull(Video::withTrashed()->find($this->video->id));
-    }
+    }*/
 
     /**
      * @return string

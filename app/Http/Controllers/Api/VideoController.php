@@ -7,8 +7,17 @@ use App\Models\Video;
 class VideoController extends BasicCrudController {
 
     protected $validationRules = [
-
+        'title' => 'required|max:255',
+        'description' => 'required',
+        'year_launched' => 'required|date_format:Y',
+        'opened' => 'boolean',
+        'duration' => 'required|integer',
     ];
+
+    public function __construct() {
+        parent::__construct();
+        $this->validationRules['rating'] = 'required|in:' . implode(',', Video::RATING_LIST);
+    }
 
     /**
      * @return string

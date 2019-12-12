@@ -3,6 +3,8 @@
 namespace Tests\Stubs\Controllers;
 
 use App\Http\Controllers\Api\BasicCrudController;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Tests\Stubs\Models\CategoryStub;
 
 class CategoryControllerStub extends BasicCrudController {
@@ -28,5 +30,9 @@ class CategoryControllerStub extends BasicCrudController {
 
     protected function rulesUpdate() {
         return $this->validationRules;
+    }
+
+    protected function afterSave(Model $model, Request $request) {
+        return $model;
     }
 }

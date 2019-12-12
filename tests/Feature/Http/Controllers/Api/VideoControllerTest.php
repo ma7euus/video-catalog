@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Http\Controllers\Api;
 
+use App\Models\Category;
+use App\Models\Genre;
 use App\Models\Video;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestResponse;
@@ -24,12 +26,17 @@ class VideoControllerTest extends TestCase {
         parent::setUp();
         $this->video = factory(Video::class)->create();
 
+        $category = factory(Category::class)->create();
+        $genre = factory(Genre::class)->create();
+
         $this->sendData = [
             'title' => 'title',
             'description' => 'description',
             'year_launched' => 2010,
             'duration' => 90,
             'rating' => Video::RATING_LIST[0],
+            'categories_id' => [$category->id],
+            'genres_id' => [$genre->id]
         ];
     }
 
@@ -60,6 +67,8 @@ class VideoControllerTest extends TestCase {
             'year_launched' => '',
             'duration' => '',
             'rating' => '',
+            'categories_id' => [],
+            'genres_id' => [],
         ];
         $this->assertInvalidationInStoreAction($data, 'required');
         $this->assertInvalidationInUpdateAction($data, 'required');

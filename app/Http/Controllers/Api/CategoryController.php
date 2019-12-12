@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Category;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class CategoryController extends BasicCrudController {
 
@@ -29,5 +31,9 @@ class CategoryController extends BasicCrudController {
 
     protected function rulesUpdate() {
         return $this->validationRules;
+    }
+
+    protected function afterSave(Model $model, Request $request) {
+        return $model;
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\CastMember;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class CastMemberController extends BasicCrudController {
 
@@ -28,5 +30,9 @@ class CastMemberController extends BasicCrudController {
 
     protected function rulesUpdate() {
         return $this->validationRules;
+    }
+
+    protected function afterSave(Model $model, Request $request) {
+        return $model;
     }
 }

@@ -16,6 +16,8 @@ abstract class BasicCrudController extends Controller {
 
     abstract protected function rulesUpdate();
 
+    abstract protected function afterSave(Model $model, Request $request);
+
     public function __construct() {}
 
     public function index() {
@@ -25,7 +27,7 @@ abstract class BasicCrudController extends Controller {
     public function store(Request $request) {
         $validationData = $this->validate($request, $this->rulesStore());
         /** @var Model $obj */
-        $obj = $this->model()::create($validationData);
+        $obj = $this->afterSave($this->model()::create($validationData), $request);
         $obj->refresh();
         return $obj;
     }
@@ -46,7 +48,7 @@ abstract class BasicCrudController extends Controller {
         $obj = $this->findOrFail($id);
         $validationData = $this->validate($request, $this->rulesUpdate());
         $obj->update($validationData);
-        return $obj;
+        return $this->afterSave($obj, $request);
     }
 
     public function destroy($id) {

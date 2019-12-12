@@ -114,6 +114,26 @@ class VideoControllerTest extends TestCase {
         $this->assertInvalidationInUpdateAction($data, 'in');
     }
 
+    public function testInvalidationArrayExistsFields() {
+        $testRules = [
+            'array' => [
+                'categories_id' => 'a',
+                'genres_id' => 'a'
+            ],
+            'exists' => [
+                'categories_id' => [1234],
+                'genres_id' => [1234]
+            ]
+        ];
+
+        foreach ($testRules as $rule => $data) {
+            foreach ($data as $field => $value) {
+                $this->assertInvalidationInStoreAction([$field => $value], $rule);
+                $this->assertInvalidationInUpdateAction([$field => $value], $rule);
+            }
+        }
+    }
+
     public function testSave() {
 
         $data = [

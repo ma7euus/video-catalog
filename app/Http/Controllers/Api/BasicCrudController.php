@@ -27,7 +27,10 @@ abstract class BasicCrudController extends Controller {
     public function store(Request $request) {
         $validationData = $this->validate($request, $this->rulesStore());
         /** @var Model $obj */
-        $obj = $this->afterSave($this->model()::create($validationData), $request);
+        $obj = \DB::transaction(function () use ($request, $validationData) {
+            $obj = $this->afterSave($this->model()::create($validationData), $request);
+            return $obj;
+        });
         $obj->refresh();
         return $obj;
     }

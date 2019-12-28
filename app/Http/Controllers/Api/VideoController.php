@@ -39,7 +39,7 @@ class VideoController extends BasicCrudController {
         return $this->validationRules;
     }
 
-    protected function afterSave(Model $model, Request $request) {
+    protected function handleRelations(Model $model, Request $request) {
         $model->categories()->sync($request->get('categories_id'));
         $model->genres()->sync($request->get('genres_id'));
         return $model;

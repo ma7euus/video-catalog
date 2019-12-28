@@ -32,7 +32,7 @@ class GenreController extends BasicCrudController {
         return $this->validationRules;
     }
 
-    protected function afterSave(Model $model, Request $request) {
+    protected function handleRelations(Model $model, Request $request) {
         return $model;
     }
 }

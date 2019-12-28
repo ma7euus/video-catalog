@@ -16,7 +16,7 @@ abstract class BasicCrudController extends Controller {
 
     abstract protected function rulesUpdate();
 
-    abstract protected function afterSave(Model $model, Request $request);
+    abstract protected function handleRelations(Model $model, Request $request);
 
     public function __construct() {}
 
@@ -28,7 +28,7 @@ abstract class BasicCrudController extends Controller {
         $validationData = $this->validate($request, $this->rulesStore());
         /** @var Model $obj */
         $obj = \DB::transaction(function () use ($request, $validationData) {
-            $obj = $this->afterSave($this->model()::create($validationData), $request);
+            $obj = $this->handleRelations($this->model()::create($validationData), $request);
             return $obj;
         });
         $obj->refresh();
@@ -51,7 +51,7 @@ abstract class BasicCrudController extends Controller {
         $obj = $this->findOrFail($id);
         $validationData = $this->validate($request, $this->rulesUpdate());
         $obj->update($validationData);
-        return $this->afterSave($obj, $request);
+        return $this->handleRelations($obj, $request);
     }
 
     public function destroy($id) {

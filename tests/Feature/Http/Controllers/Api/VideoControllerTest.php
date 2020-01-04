@@ -224,4 +224,14 @@ class VideoControllerTest extends TestCase {
     protected function model() {
         return get_class($this->video);
     }
+
+    /**
+     * @return mixed
+     */
+    protected function withRelations() {
+        return [
+            'categories_id' => [],
+            'genres_id' => [],
+        ];
+    }
 }

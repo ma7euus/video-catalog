@@ -21,6 +21,7 @@ trait TestSaves {
         if ($response->status() !== 201) {
             throw new \Exception("Response status must be 201, given {$response->status()}:\n{$response->content()}");
         }
+        $testDatabase = array_diff_key($testDatabase, $this->withRelations());
         $this->assertInDatabase($response, $testDatabase);
         $this->assertJsonResponseContent($response, $testDatabase, $testJsonData);
         return $response;
@@ -31,7 +32,9 @@ trait TestSaves {
         $response = $this->json('PUT', $this->routeUpdate(), $sendData);
         if ($response->status() !== 200) {
             throw new \Exception("Response status must be 200, given {$response->status()}:\n{$response->content()}");
+
         }
+        $testDatabase = array_diff_key($testDatabase, $this->withRelations());
         $this->assertInDatabase($response, $testDatabase);
         $this->assertJsonResponseContent($response, $testDatabase, $testJsonData);
         return $response;

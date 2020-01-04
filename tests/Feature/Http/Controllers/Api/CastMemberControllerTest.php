@@ -3,7 +3,6 @@
 namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Models\CastMember;
-use Carbon\Traits\Cast;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 use Tests\Traits\TestController;
@@ -138,5 +137,12 @@ class CastMemberControllerTest extends TestCase {
      */
     protected function model() {
         return get_class($this->castMember);
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function withRelations() {
+        return [];
     }
 }

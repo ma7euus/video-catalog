@@ -137,4 +137,11 @@ class GenreControllerTest extends TestCase {
     protected function model() {
         return get_class($this->genre);
     }
+
+    /**
+     * @return mixed
+     */
+    protected function withRelations() {
+        return [];
+    }
 }

@@ -138,4 +138,11 @@ class CategoryControllerTest extends TestCase {
     protected function model() {
         return get_class($this->category);
     }
+
+    /**
+     * @return mixed
+     */
+    protected function withRelations() {
+        return [];
+    }
 }

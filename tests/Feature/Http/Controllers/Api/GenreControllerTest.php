@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\Api;
 
+use App\Models\Category;
 use App\Models\Genre;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
@@ -17,9 +18,19 @@ class GenreControllerTest extends TestCase {
      */
     private $genre;
 
+    /**
+     * @var array
+     */
+    private $sendData;
+
     protected function setUp(): void {
         parent::setUp();
         $this->genre = factory(Genre::class)->create();
+
+        $category = factory(Category::class)->create();
+        $this->sendData = [
+            'categories_id' => [$category->id]
+        ];
     }
 
     /**
@@ -44,7 +55,7 @@ class GenreControllerTest extends TestCase {
     public function testInvalidationData() {
 
         $data = [
-            'name' => ''
+            'name' => '',
         ];
         $this->assertInvalidationInStoreAction($data, 'required');
         $this->assertInvalidationInUpdateAction($data, 'required');

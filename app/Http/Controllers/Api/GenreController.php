@@ -10,7 +10,8 @@ class GenreController extends BasicCrudController {
 
     protected $validationRules = [
         'name' => 'required|max:255',
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
+        'categories_id' => 'required|array|exists:categories,id'
     ];
 
     public function __construct() {
@@ -33,6 +34,7 @@ class GenreController extends BasicCrudController {
     }
 
     protected function handleRelations(Model $model, Request $request) {
+        $model->categories()->sync($request->get('categories_id'));
         return $model;
     }
 }

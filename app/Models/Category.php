@@ -17,4 +17,8 @@ class Category extends Model {
     protected $casts = ['id' => 'string', 'is_active' => 'boolean'];
 
     public $incrementing = false;
+
+    public function genres() {
+        return $this->belongsToMany(Genre::class);
+    }
 }

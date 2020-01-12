@@ -15,8 +15,8 @@ class VideoController extends BasicCrudController {
         'opened' => 'boolean',
         'opened' => 'boolean',
         'duration' => 'required|integer',
-        'categories_id' => 'required|array|exists:categories,id',
-        'genres_id' => 'required|array|exists:genres,id',
+        'categories_id' => 'required|array|exists:categories,id,deleted_at,NULL',
+        'genres_id' => 'required|array|exists:genres,id,deleted_at,NULL',
     ];
 
     public function __construct() {

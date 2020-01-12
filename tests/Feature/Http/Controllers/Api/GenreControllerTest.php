@@ -2,16 +2,21 @@
 
 namespace Tests\Feature\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\GenreController;
+use App\Http\Controllers\Api\VideoController;
 use App\Models\Category;
 use App\Models\Genre;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Http\Request;
+use Tests\Exceptions\TestExceptions;
 use Tests\TestCase;
 use Tests\Traits\TestController;
+use Tests\Traits\TestSaves;
 use Tests\Traits\TestValidations;
 
 class GenreControllerTest extends TestCase {
 
-    use DatabaseMigrations, TestController, TestValidations;
+    use DatabaseMigrations, TestController, TestValidations, TestSaves;
 
     /**
      * @var Genre
@@ -56,6 +61,7 @@ class GenreControllerTest extends TestCase {
 
         $data = [
             'name' => '',
+            'categories_id' => ''
         ];
         $this->assertInvalidationInStoreAction($data, 'required');
         $this->assertInvalidationInUpdateAction($data, 'required');
@@ -71,54 +77,140 @@ class GenreControllerTest extends TestCase {
         ];
         $this->assertInvalidationInStoreAction($data, 'boolean');
         $this->assertInvalidationInUpdateAction($data, 'boolean');
+
+        $data = [
+            'categories_id' => 'a'
+        ];
+        $this->assertInvalidationInStoreAction($data, 'array');
+        $this->assertInvalidationInUpdateAction($data, 'array');
+
+        $data = [
+            'categories_id' => [100]
+        ];
+        $this->assertInvalidationInStoreAction($data, 'exists');
+        $this->assertInvalidationInUpdateAction($data, 'exists');
+
+        /** @var Category $category */
+        $category = factory(Category::class)->create();
+        $category->delete();
+        $data = [
+            'categories_id' => [$category->id]
+        ];
+        $this->assertInvalidationInStoreAction($data, 'exists');
+        $this->assertInvalidationInUpdateAction($data, 'exists');
     }
 
     public function testStore() {
-        $response = $this->json('POST', route('genres.store'), [
+
+        $data = [
             'name' => 'test'
+        ];
+
+        $response = $this->assertStore($data + $this->sendData,
+            $data + ['is_active' => true, 'deleted_at' => null]);
+
+        $response->assertJsonStructure([
+            'updated_at', 'created_at'
         ]);
 
-        $id = $response->json('id');
-        $genre = Genre::find($id);
+        $this->assertHasCategory($response->json('id'), current($this->sendData['categories_id']));
 
-        $response->assertStatus(201)
-            ->assertJson($genre->toArray());
-
-        $this->assertTrue($response->json('is_active'));
-
-        $response = $this->json(
-            'POST',
-            route('genres.store'),
-            [
-                'name' => 'test',
-                'is_active' => false
-            ]
-        );
-
-        $response->assertJsonFragment([
+        $data = [
+            'name' => 'test',
             'is_active' => false
-        ]);
+        ];
+
+        $response = $this->assertStore($data + $this->sendData,
+            $data + ['is_active' => false]);
 
     }
 
     public function testUpdate() {
 
-        $genre = factory(Genre::class)->create([
-            'is_active' => false
-        ]);
-        $response = $this->json('PUT', route('genres.update', ['genre' => $genre->id]), [
+        $data = [
             'name' => 'test',
             'is_active' => true
+        ];
+
+        $response = $this->assertUpdate($data + $this->sendData,
+            $data + ['deleted_at' => null]);
+
+        $response->assertJsonStructure([
+            'updated_at', 'created_at'
         ]);
 
-        $id = $response->json('id');
-        $genre = Genre::find($id);
+        $this->assertHasCategory($response->json('id'), current($this->sendData['categories_id']));
+    }
 
-        $response->assertStatus(200)
-            ->assertJson($genre->toArray())
-            ->assertJsonFragment([
-                'is_active' => true
-            ]);
+    private function assertHasCategory($genreId, $categoryId) {
+        $this->assertDatabaseHas('category_genre', [
+            'genre_id' => $genreId,
+            'category_id' => $categoryId
+        ]);
+    }
+
+    public function testRollbackStore() {
+        $controller = \Mockery::mock(GenreController::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller->shouldReceive('validate')
+            ->withAnyArgs()
+            ->andReturn(['name' => 'test']);
+
+        $controller->shouldReceive('rulesStore')
+            ->withAnyArgs()
+            ->andReturn([]);
+
+        $request = \Mockery::mock(Request::class);
+
+        $controller->shouldReceive('handleRelations')
+            ->once()
+            ->andThrow(new TestExceptions());
+
+        $hasError = false;
+        try {
+            $controller->store($request);
+        } catch (TestExceptions $exp) {
+            $this->assertCount(1, Genre::all());
+            $hasError = true;
+        }
+
+        $this->assertTrue($hasError);
+    }
+
+    public function testRollbackUpdate() {
+        $controller = \Mockery::mock(GenreController::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller->shouldReceive('findOrFail')
+            ->withAnyArgs()
+            ->andReturn($this->genre);
+
+        $controller->shouldReceive('validate')
+            ->withAnyArgs()
+            ->andReturn(['name' => 'test']);
+
+        $controller->shouldReceive('rulesUpdate')
+            ->withAnyArgs()
+            ->andReturn([]);
+
+        $request = \Mockery::mock(Request::class);
+
+        $controller->shouldReceive('handleRelations')
+            ->once()
+            ->andThrow(new TestExceptions());
+
+        $hasError = false;
+        try {
+            $controller->update($request, 1);
+        } catch (TestExceptions $exp) {
+            $this->assertCount(1, Genre::all());
+            $hasError = true;
+        }
+
+        $this->assertTrue($hasError);
     }
 
     public function testDestroy() {
@@ -149,10 +241,4 @@ class GenreControllerTest extends TestCase {
         return get_class($this->genre);
     }
 
-    /**
-     * @return mixed
-     */
-    protected function withRelations() {
-        return [];
-    }
 }

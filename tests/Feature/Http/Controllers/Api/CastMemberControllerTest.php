@@ -139,10 +139,4 @@ class CastMemberControllerTest extends TestCase {
         return get_class($this->castMember);
     }
 
-    /**
-     * @return mixed
-     */
-    protected function withRelations() {
-        return [];
-    }
 }

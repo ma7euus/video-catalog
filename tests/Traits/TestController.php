@@ -21,8 +21,4 @@ trait TestController {
      */
     abstract protected function routeUpdate();
 
-    /**
-     * @return mixed
-     */
-    abstract protected function withRelations();
 }

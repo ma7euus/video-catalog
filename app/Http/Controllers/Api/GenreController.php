@@ -11,7 +11,7 @@ class GenreController extends BasicCrudController {
     protected $validationRules = [
         'name' => 'required|max:255',
         'is_active' => 'boolean',
-        'categories_id' => 'required|array|exists:categories,id'
+        'categories_id' => 'required|array|exists:categories,id,deleted_at,NULL'
     ];
 
     public function __construct() {

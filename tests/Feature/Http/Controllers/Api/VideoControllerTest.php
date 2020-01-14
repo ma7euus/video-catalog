@@ -12,13 +12,14 @@ use Illuminate\Foundation\Testing\TestResponse;
 use Tests\Exceptions\TestExceptions;
 use Tests\TestCase;
 use Tests\Traits\TestController;
+use Tests\Traits\TestRelations;
 use Tests\Traits\TestSaves;
 use Tests\Traits\TestValidations;
 use Illuminate\Http\Request;
 
 class VideoControllerTest extends TestCase {
 
-    use DatabaseMigrations, TestController, TestValidations, TestSaves;
+    use DatabaseMigrations, TestController, TestValidations, TestSaves, TestRelations;
 
     /**
      * @var Video
@@ -288,6 +289,32 @@ class VideoControllerTest extends TestCase {
      */
     protected function model() {
         return get_class($this->video);
+    }
+
+    public function testSyncRelations() {
+        $this->syncRelations($this->sendData + $this->sendDataRelation);
+    }
+
+    /**
+     * @return array
+     */
+    protected function relationTables() {
+        $relations = [];
+        array_push($relations, [
+            'table' => 'category_video',
+            'main_key' => 'video_id',
+            'relation_key' => 'category_id',
+            'relation_model' => Category::class,
+            'main_table_key_relation' => 'categories_id'
+        ]);
+        array_push($relations, [
+            'table' => 'genre_video',
+            'main_key' => 'video_id',
+            'relation_key' => 'genre_id',
+            'relation_model' => Genre::class,
+            'main_table_key_relation' => 'genres_id'
+        ]);
+        return $relations;
     }
 
 }

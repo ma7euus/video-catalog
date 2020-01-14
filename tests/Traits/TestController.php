@@ -12,9 +12,10 @@ trait TestController {
     abstract protected function model();
 
     /**
-     * @return string
+     * @param null $id
+     * @return mixed
      */
-    abstract protected function routeStore();
+    abstract protected function routeStore($id = null);
 
     /**
      * @return string

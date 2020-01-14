@@ -3,7 +3,6 @@
 namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\GenreController;
-use App\Http\Controllers\Api\VideoController;
 use App\Models\Category;
 use App\Models\Genre;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -11,12 +10,13 @@ use Illuminate\Http\Request;
 use Tests\Exceptions\TestExceptions;
 use Tests\TestCase;
 use Tests\Traits\TestController;
+use Tests\Traits\TestRelations;
 use Tests\Traits\TestSaves;
 use Tests\Traits\TestValidations;
 
 class GenreControllerTest extends TestCase {
 
-    use DatabaseMigrations, TestController, TestValidations, TestSaves;
+    use DatabaseMigrations, TestController, TestValidations, TestSaves, TestRelations;
 
     /**
      * @var Genre
@@ -228,10 +228,12 @@ class GenreControllerTest extends TestCase {
     }
 
     /**
+     * @param null $genreId
      * @return string
      */
-    protected function routeUpdate() {
-        return route('genres.update', ['genre' => $this->genre->id]);
+    protected function routeUpdate($genreId = null) {
+        $genreId = $genreId == null ? $this->genre->id : $genreId;
+        return route('genres.update', ['genre' => $genreId]);
     }
 
     /**
@@ -241,4 +243,26 @@ class GenreControllerTest extends TestCase {
         return get_class($this->genre);
     }
 
+    public function testSyncRelations() {
+        $sendData = [
+            'name' => 'test'
+        ];
+
+        $this->syncRelations($sendData);
+    }
+
+    /**
+     * @return array
+     */
+    protected function relationTables() {
+        $relations = [];
+        array_push($relations, [
+            'table' => 'category_genre',
+            'main_key' => 'genre_id',
+            'relation_key' => 'category_id',
+            'relation_model' => Category::class,
+            'main_table_key_relation' => 'categories_id'
+        ]);
+        return $relations;
+    }
 }

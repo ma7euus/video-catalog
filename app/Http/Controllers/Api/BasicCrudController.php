@@ -10,6 +10,13 @@ abstract class BasicCrudController extends Controller {
 
     protected $validationRules = [];
 
+    /**
+     * @var Request
+     */
+    protected $request;
+
+    public function __construct() {}
+
     abstract protected function model();
 
     abstract protected function rulesStore();
@@ -18,13 +25,12 @@ abstract class BasicCrudController extends Controller {
 
     abstract protected function handleRelations(Model $model, Request $request);
 
-    public function __construct() {}
-
     public function index() {
         return $this->model()::all();
     }
 
     public function store(Request $request) {
+        $this->request = $request;
         $validationData = $this->validate($request, $this->rulesStore());
         /** @var Model $obj */
         $obj = \DB::transaction(function () use ($request, $validationData) {
@@ -49,6 +55,7 @@ abstract class BasicCrudController extends Controller {
 
     public function update(Request $request, $id) {
         $obj = $this->findOrFail($id);
+        $this->request = $request;
         $validationData = $this->validate($request, $this->rulesUpdate());
         $obj->update($validationData);
         return $this->handleRelations($obj, $request);

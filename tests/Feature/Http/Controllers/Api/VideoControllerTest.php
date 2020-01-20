@@ -311,7 +311,6 @@ class VideoControllerTest extends TestCase {
         ]);
         array_push($relations, [
             'exec_func_1' => ['name' => 'categories', 'sendData_arg' => 'categories_id'],
-            'func' => 'genres',
             'table' => 'genre_video',
             'main_key' => 'video_id',
             'relation_key' => 'genre_id',

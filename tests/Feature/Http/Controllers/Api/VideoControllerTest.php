@@ -36,6 +36,7 @@ class VideoControllerTest extends TestCase {
 
         $category = factory(Category::class)->create();
         $genre = factory(Genre::class)->create();
+        $genre->categories()->sync($category->id);
 
         $this->sendData = [
             'title' => 'title',
@@ -301,6 +302,7 @@ class VideoControllerTest extends TestCase {
     protected function relationTables() {
         $relations = [];
         array_push($relations, [
+            'exec_func_1' => ['name' => 'genres', 'sendData_arg' => 'genres_id'],
             'table' => 'category_video',
             'main_key' => 'video_id',
             'relation_key' => 'category_id',
@@ -308,6 +310,8 @@ class VideoControllerTest extends TestCase {
             'main_table_key_relation' => 'categories_id'
         ]);
         array_push($relations, [
+            'exec_func_1' => ['name' => 'categories', 'sendData_arg' => 'categories_id'],
+            'func' => 'genres',
             'table' => 'genre_video',
             'main_key' => 'video_id',
             'relation_key' => 'genre_id',

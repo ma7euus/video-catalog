@@ -18,6 +18,9 @@ class Category extends Model {
 
     public $incrementing = false;
 
+    /**
+     * @return mixed
+     */
     public function genres() {
         return $this->belongsToMany(Genre::class)->withTrashed();
     }

@@ -72,6 +72,6 @@ class GenresHasCategoriesRule implements Rule {
      * @return string
      */
     public function message() {
-        return 'A genre ID must be related at least a category ID';
+        return trans('validation.genres_has_categories');
     }
 }

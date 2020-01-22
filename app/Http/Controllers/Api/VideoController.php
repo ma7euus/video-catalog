@@ -49,7 +49,8 @@ class VideoController extends BasicCrudController {
     protected function addRuleIfGenreHasCategories(Request $request) {
         $categoriesId = $request->get('categories_id');
         $categoriesId = is_array($categoriesId) ? $categoriesId : [];
-        $this->validationRules['genres_id'][] = new GenresHasCategoriesRule($categoriesId);
+        $idx = count($this->validationRules['genres_id']) - 1;
+        $this->validationRules['genres_id'][$idx] = new GenresHasCategoriesRule($categoriesId);
     }
 
     protected function handleRelations(Model $model, Request $request) {

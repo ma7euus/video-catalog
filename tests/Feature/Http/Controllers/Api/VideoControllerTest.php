@@ -302,20 +302,24 @@ class VideoControllerTest extends TestCase {
     protected function relationTables() {
         $relations = [];
         array_push($relations, [
-            'exec_func_1' => ['name' => 'genres', 'sendData_arg' => 'genres_id'],
             'table' => 'category_video',
             'main_key' => 'video_id',
             'relation_key' => 'category_id',
             'relation_model' => Category::class,
-            'main_table_key_relation' => 'categories_id'
+            'main_table_key_relation' => 'categories_id',
+            'pivot' => [
+                'genres' => 'genres_id'
+            ]
         ]);
         array_push($relations, [
-            'exec_func_1' => ['name' => 'categories', 'sendData_arg' => 'categories_id'],
             'table' => 'genre_video',
             'main_key' => 'video_id',
             'relation_key' => 'genre_id',
             'relation_model' => Genre::class,
-            'main_table_key_relation' => 'genres_id'
+            'main_table_key_relation' => 'genres_id',
+            'pivot' => [
+                'categories' => 'categories_id'
+            ]
         ]);
         return $relations;
     }

@@ -261,7 +261,8 @@ class GenreControllerTest extends TestCase {
             'main_key' => 'genre_id',
             'relation_key' => 'category_id',
             'relation_model' => Category::class,
-            'main_table_key_relation' => 'categories_id'
+            'main_table_key_relation' => 'categories_id',
+            'pivot' => []
         ]);
         return $relations;
     }

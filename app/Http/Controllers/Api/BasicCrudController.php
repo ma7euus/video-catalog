@@ -34,8 +34,7 @@ abstract class BasicCrudController extends Controller {
         $validationData = $this->validate($request, $this->rulesStore());
         /** @var Model $obj */
         $obj = \DB::transaction(function () use ($request, $validationData) {
-            $obj = $this->handleRelations($this->model()::create($validationData), $request);
-            return $obj;
+            return $this->handleRelations($this->model()::create($validationData), $request);
         });
         $obj->refresh();
         return $obj;
@@ -49,16 +48,19 @@ abstract class BasicCrudController extends Controller {
     }
 
     public function show($id) {
-        $obj = $this->findOrFail($id);
-        return $obj;
+        return $this->findOrFail($id);
     }
 
     public function update(Request $request, $id) {
         $obj = $this->findOrFail($id);
         $this->request = $request;
         $validationData = $this->validate($request, $this->rulesUpdate());
-        $obj->update($validationData);
-        return $this->handleRelations($obj, $request);
+        /** @var Model $obj */
+        $obj = \DB::transaction(function () use ($request, $validationData, $obj) {
+            $obj->update($validationData);
+            return $this->handleRelations($obj, $request);
+        });
+        return $obj;
     }
 
     public function destroy($id) {

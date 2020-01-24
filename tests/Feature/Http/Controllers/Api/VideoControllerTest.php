@@ -125,12 +125,10 @@ class VideoControllerTest extends TestCase {
         $this->assertInvalidationInUpdateAction($data, 'in');
     }
 
-    public function testInvalidationArrayExistsFields() {
+    public function _testInvalidationArrayExistsFields() {
         $category = factory(Category::class)->create();
-        $category->delete();
 
         $genre = factory(Genre::class)->create();
-        $genre->delete();
 
         $testRules = [];
         array_push($testRules, ['rule' => 'array', 'fields' => [
@@ -154,6 +152,8 @@ class VideoControllerTest extends TestCase {
                 $this->assertInvalidationInUpdateAction([$field => $value], $rule['rule']);
             }
         }
+        $category->delete();
+        $genre->delete();
     }
 
     public function testSave() {

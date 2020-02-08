@@ -33,7 +33,4 @@ class CategoryController extends BasicCrudController {
         return $this->validationRules;
     }
 
-    protected function handleRelations(Model $model, Request $request) {
-        return $model;
-    }
 }

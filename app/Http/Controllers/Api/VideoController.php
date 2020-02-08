@@ -30,6 +30,25 @@ class VideoController extends BasicCrudController {
     }
 
     /**
+     * @param Request $request
+     * @param $validationData
+     * @return Model|mixed
+     */
+    protected function handleStore(Request $request, $validationData) {
+        return $this->model()::create($validationData);
+    }
+
+    /**
+     * @param Request $request
+     * @param Model $obj
+     * @param $validationData
+     * @return bool|Model
+     */
+    protected function handleUpdate(Request $request, Model $obj, $validationData) {
+        return $obj->update($validationData);
+    }
+
+    /**
      * @return string
      */
     protected function model() {
@@ -51,11 +70,5 @@ class VideoController extends BasicCrudController {
         $categoriesId = is_array($categoriesId) ? $categoriesId : [];
         $idx = count($this->validationRules['genres_id']) - 1;
         $this->validationRules['genres_id'][$idx] = new GenresHasCategoriesRule($categoriesId);
-    }
-
-    protected function handleRelations(Model $model, Request $request) {
-        $model->categories()->sync($request->get('categories_id'));
-        $model->genres()->sync($request->get('genres_id'));
-        return $model;
     }
 }

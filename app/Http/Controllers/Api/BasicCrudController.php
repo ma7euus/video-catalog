@@ -23,7 +23,9 @@ abstract class BasicCrudController extends Controller {
 
     abstract protected function rulesUpdate();
 
-    abstract protected function handleRelations(Model $model, Request $request);
+    protected function handleRelations(Model $model, Request $request){
+        return $model;
+    }
 
     public function index() {
         return $this->model()::all();
@@ -32,11 +34,22 @@ abstract class BasicCrudController extends Controller {
     public function store(Request $request) {
         $this->request = $request;
         $validationData = $this->validate($request, $this->rulesStore());
+        $obj = $this->handleStore($request, $validationData);
+        $obj->refresh();
+        return $obj;
+    }
+
+    /**
+     * @param Request $request
+     * @param $validationData
+     * @return Model
+     * @throws \Throwable
+     */
+    protected function handleStore(Request $request, $validationData) {
         /** @var Model $obj */
         $obj = \DB::transaction(function () use ($request, $validationData) {
             return $this->handleRelations($this->model()::create($validationData), $request);
         });
-        $obj->refresh();
         return $obj;
     }
 
@@ -55,8 +68,20 @@ abstract class BasicCrudController extends Controller {
         $obj = $this->findOrFail($id);
         $this->request = $request;
         $validationData = $this->validate($request, $this->rulesUpdate());
+        $obj = $this->handleUpdate($request, $obj, $validationData);
+        return $obj;
+    }
+
+    /**
+     * @param Request $request
+     * @param Model $obj
+     * @param $validationData
+     * @return Model
+     * @throws \Throwable
+     */
+    protected function handleUpdate(Request $request, Model $obj, $validationData) {
         /** @var Model $obj */
-        $obj = \DB::transaction(function () use ($request, $validationData, $obj) {
+        $obj = \DB::transaction(function () use ($request, $obj, $validationData) {
             $obj->update($validationData);
             return $this->handleRelations($obj, $request);
         });

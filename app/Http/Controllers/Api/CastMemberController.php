@@ -31,8 +31,4 @@ class CastMemberController extends BasicCrudController {
     protected function rulesUpdate() {
         return $this->validationRules;
     }
-
-    protected function handleRelations(Model $model, Request $request) {
-        return $model;
-    }
 }

@@ -2,8 +2,12 @@
 
 namespace Tests\Feature\Models;
 
+use App\Http\Controllers\Api\VideoController;
 use App\Models\Video;
+use Doctrine\DBAL\Query\QueryException;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Http\Request;
+use Tests\Exceptions\TestExceptions;
 use Tests\TestCase;
 
 class VideoTest extends TestCase {
@@ -91,5 +95,46 @@ class VideoTest extends TestCase {
 
         $video->restore();
         $this->assertNotNull(Video::find($video->id));
+    }
+
+    public function testRollbackCreate() {
+        $hasError = false;
+        try {
+            Video::create([
+                'title' => 'title',
+                'description' => 'description',
+                'year_launched' => 2010,
+                'rating' => Video::RATING_LIST[0],
+                'duration' => 90,
+                'categories_id' => [0, 1, 2]
+            ]);
+        } catch (\Illuminate\Database\QueryException $exp) {
+            $this->assertCount(0, Video::all());
+            $hasError = true;
+        }
+        $this->assertTrue($hasError);
+    }
+
+    public function testRollbackUpdate() {
+        $hasError = false;
+        /** @var Video $video */
+        $video = factory(Video::class)->create();
+        $oldTitle = $video->title;
+        try {
+            $video->update([
+                'title' => 'title',
+                'description' => 'description',
+                'year_launched' => 2010,
+                'rating' => Video::RATING_LIST[0],
+                'duration' => 90,
+                'categories_id' => [0, 1, 2]
+            ]);
+        } catch (\Illuminate\Database\QueryException $exception) {
+            $this->assertDatabaseHas('videos', [
+                'title' => $oldTitle
+            ]);
+            $hasError = true;
+        }
+        $this->assertTrue($hasError);
     }
 }

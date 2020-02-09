@@ -12,13 +12,22 @@ class Video extends Model {
 
     const RATING_LIST = ['L', '10', '12', '14', '18'];
 
+    const MAX_VIDEO_SIZE = 1024 * 1024 * 50;
+    const MAX_THUMB_SIZE = 1024 * 5;
+    const MAX_BANNER_SIZE = 1024 * 10;
+    const MAX_TRAILER_SIZE = 1024 * 1024 * 1;
+
     protected $fillable = [
         'title',
         'description',
         'year_launched',
         'opened',
+        'rating',
         'duration',
-        'rating'
+        'video_file',
+        'thumb_file',
+        'trailer_file',
+        'banner_file'
     ];
 
     protected $dates = ['deleted_at'];
@@ -32,6 +41,7 @@ class Video extends Model {
 
     public $incrementing = false;
 
+    public static $fileFields = ['video_file', 'thumb_file', 'banner_file', 'trailer_file'];
 
     /**
      * @param array $attributes

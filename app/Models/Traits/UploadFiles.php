@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 
-trait UploadFilesTrait {
+trait UploadFiles {
     public $oldFiles = [];
 
     protected abstract function uploadDir();

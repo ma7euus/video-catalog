@@ -2,12 +2,12 @@
 
 namespace Tests\Stubs\Models\Traits;
 
-use App\Models\Traits\UploadFilesTrait;
+use App\Models\Traits\UploadFiles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 
 class UploadFileStub extends Model {
-    use UploadFilesTrait;
+    use UploadFiles;
 
     protected $table = 'upload_file_stubs';
     protected $fillable = ['name', 'file1', 'file2'];

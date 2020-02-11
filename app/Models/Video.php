@@ -79,7 +79,7 @@ class Video extends Model {
                 $this->uploadFiles($files);
             }
             \DB::commit();
-            return $saved;
+            return $this;
         } catch (\Exception $e) {
             \DB::rollBack();
             throw $e;

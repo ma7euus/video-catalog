@@ -22,12 +22,22 @@ class VideoController extends BasicCrudController {
             'array',
             'exists:genres,id,deleted_at,NULL'
         ],
-        'video_file' => 'required'
+        'video_file' => 'sometimes|mimetypes:video/mp4|max:' . Video::MAX_VIDEO_SIZE,
+        'thumb_file' => 'sometimes|image|max:' . Video::MAX_THUMB_SIZE,
+        'trailer_file' => 'sometimes|mimetypes:video/mp4|max:' . Video::MAX_TRAILER_SIZE,
+        'banner_file' => 'sometimes|image|max:' . Video::MAX_BANNER_SIZE
     ];
 
     public function __construct() {
         parent::__construct();
         $this->validationRules['rating'] = 'required|in:' . implode(',', Video::RATING_LIST);
+    }
+
+    /**
+     * @return string
+     */
+    protected function model() {
+        return Video::class;
     }
 
     /**
@@ -50,22 +60,24 @@ class VideoController extends BasicCrudController {
     }
 
     /**
-     * @return string
+     * @return array
      */
-    protected function model() {
-        return Video::class;
-    }
-
     protected function rulesStore() {
         $this->addRuleIfGenreHasCategories($this->request);
         return $this->validationRules;
     }
 
+    /**
+     * @return array
+     */
     protected function rulesUpdate() {
         $this->addRuleIfGenreHasCategories($this->request);
         return $this->validationRules;
     }
 
+    /**
+     * @param Request $request
+     */
     protected function addRuleIfGenreHasCategories(Request $request) {
         $categoriesId = $request->get('categories_id');
         $categoriesId = is_array($categoriesId) ? $categoriesId : [];

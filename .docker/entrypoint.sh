@@ -6,5 +6,11 @@ cp .env.testing.example .env.testing
 composer install
 php artisan key:generate
 php artisan migrate
+php artisan ide-helper:generate
+php artisan ide-helper:model > /dev/null << EOF
+<no>
+EOF
+
+chmod -R 777 ./
 
 php-fpm

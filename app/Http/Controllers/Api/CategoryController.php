@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -33,4 +34,7 @@ class CategoryController extends BasicCrudController {
         return $this->validationRules;
     }
 
+    protected function resource() {
+        return CategoryResource::class;
+    }
 }

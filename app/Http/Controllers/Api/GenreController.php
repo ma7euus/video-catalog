@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\GenreResource;
 use App\Models\Genre;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -36,5 +37,9 @@ class GenreController extends BasicCrudController {
     protected function handleRelations(Model $model, Request $request) {
         $model->categories()->sync($request->get('categories_id'));
         return $model;
+    }
+
+    protected function resource() {
+        return GenreResource::class;
     }
 }

@@ -28,7 +28,7 @@ class VideoUploadTest extends BaseVideoCrudTest {
     public function testCreateWithRollbackFiles() {
         \Storage::fake();
         \Event::listen(TransactionCommitted::class, function () {
-            throw new TestException();
+            throw new TestExceptions();
         });
         $hasError = false;
 
@@ -81,7 +81,7 @@ class VideoUploadTest extends BaseVideoCrudTest {
         \Storage::fake();
         $video = factory(Video::class)->create();
         \Event::listen(TransactionCommitted::class, function () {
-            throw new TestException();
+            throw new TestExceptions();
         });
         $hasError = false;
 

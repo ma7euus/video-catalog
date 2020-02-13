@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\VideoResource;
 use App\Models\Video;
 use App\Rules\GenresHasCategoriesRule;
 use Illuminate\Database\Eloquent\Model;
@@ -53,10 +54,11 @@ class VideoController extends BasicCrudController {
      * @param Request $request
      * @param Model $obj
      * @param $validationData
-     * @return bool|Model
+     * @return Model
      */
     protected function handleUpdate(Request $request, Model $obj, $validationData) {
-        return $obj->update($validationData);
+        $obj->update($validationData);
+        return $obj;
     }
 
     /**
@@ -83,5 +85,9 @@ class VideoController extends BasicCrudController {
         $categoriesId = is_array($categoriesId) ? $categoriesId : [];
         $idx = count($this->validationRules['genres_id']) - 1;
         $this->validationRules['genres_id'][$idx] = new GenresHasCategoriesRule($categoriesId);
+    }
+
+    protected function resource() {
+        return VideoResource::class;
     }
 }

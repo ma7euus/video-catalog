@@ -30,10 +30,10 @@ class BasicCrudControllerTest extends TestCase {
     }
 
     public function testIndex() {
-        /** @var CategoryStub $category */
-        $category = CategoryStub::create(['name' => 'test', 'description' => 'test_description']);
-        $this->assertEquals([$category->toArray()], $this->controller->index()->toArray());
+        $category = CategoryStub::create(['name' => 'name_test', 'description' => 'description_test']);
+        $this->assertEquals([$category->toArray()], $this->controller->index(new Request())->response()->getData(true)['data']);
     }
+
 
     public function testInvalidationDataInStore() {
         $this->expectException(ValidationException::class);
@@ -50,7 +50,7 @@ class BasicCrudControllerTest extends TestCase {
         $obj = $this->controller->store($request);
         $this->assertEquals(
             CategoryStub::find(1)->toArray(),
-            $obj->toArray()
+            $obj->response()->getData(true)['data']
         );
     }
 
@@ -79,7 +79,7 @@ class BasicCrudControllerTest extends TestCase {
         /** @var CategoryStub $category */
         $category = CategoryStub::create(['name' => 'test', 'description' => 'test_description']);
         $result = $this->controller->show($category->id);
-        $this->assertEquals($result->toArray(), CategoryStub::find(1)->toArray());
+        $this->assertEquals($result->response()->getData(true)['data'], CategoryStub::find(1)->toArray());
     }
 
     public function testUpdate() {
@@ -91,7 +91,7 @@ class BasicCrudControllerTest extends TestCase {
         $obj = $this->controller->update($request, $category->id);
         $this->assertEquals(
             CategoryStub::find(1)->toArray(),
-            $obj->toArray()
+            $obj->response()->getData(true)['data']
         );
     }
 

@@ -41,16 +41,9 @@ class VideoControllerUploadsTest extends BaseVideoControllerTestCase {
 
 
     public function testStoreWithVideoUpload() {
-        $category = factory(Category::class)->create();
-        $genre = factory(Genre::class)->create();
-        $genre->categories()->sync($category->id);
-
         \Storage::fake();
         $files = $this->getFiles();
-        $response = $this->json('POST', $this->routeStore(), $this->sendData + [
-                'categories_id' => [$category->id],
-                'genres_id' => [$genre->id]
-            ] + $files);
+        $response = $this->json('POST', $this->routeStore(), $this->sendData + $this->sendDataRelation + $files);
         $response->assertStatus(201);
 
         $id = $response->json('data.id');
@@ -61,16 +54,9 @@ class VideoControllerUploadsTest extends BaseVideoControllerTestCase {
     }
 
     public function testUpdateWithVideoUpload() {
-        $category = factory(Category::class)->create();
-        $genre = factory(Genre::class)->create();
-        $genre->categories()->sync($category->id);
-
         \Storage::fake();
         $files = $this->getFiles();
-        $response = $this->json('PUT', $this->routeUpdate(), $this->sendData + [
-                'categories_id' => [$category->id],
-                'genres_id' => [$genre->id]
-            ] + $files);
+        $response = $this->json('PUT', $this->routeUpdate(), $this->sendData + $this->sendDataRelation + $files);
 
         $response->assertStatus(200);
 

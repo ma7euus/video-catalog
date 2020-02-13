@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\CastMemberResource;
 use App\Models\CastMember;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -30,5 +31,9 @@ class CastMemberController extends BasicCrudController {
 
     protected function rulesUpdate() {
         return $this->validationRules;
+    }
+
+    protected function resource() {
+        return CastMemberResource::class;
     }
 }

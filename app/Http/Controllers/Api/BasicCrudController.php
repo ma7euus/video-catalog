@@ -3,19 +3,25 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Database\Eloquent\Builder;
 
 abstract class BasicCrudController extends Controller {
 
     protected $validationRules = [];
+
+    protected $defaultPerPage = 15;
 
     /**
      * @var Request
      */
     protected $request;
 
-    public function __construct() {}
+    public function __construct() {
+    }
 
     abstract protected function model();
 
@@ -23,12 +29,33 @@ abstract class BasicCrudController extends Controller {
 
     abstract protected function rulesUpdate();
 
-    protected function handleRelations(Model $model, Request $request){
+    protected abstract function resource();
+
+    protected function handleRelations(Model $model, Request $request) {
         return $model;
     }
 
-    public function index() {
-        return $this->model()::all();
+    protected function resourceCollection() {
+        return $this->resource();
+    }
+
+    public function index(Request $request) {
+        $perPage = (int)$request->get('per_page', $this->defaultPerPage);
+        $hasFilter = in_array(Filterable::class, class_uses($this->model()));
+
+        $query = $this->queryBuilder();
+
+        if ($hasFilter) {
+            $query = $query->filter($request->all());
+        }
+
+        $data = $request->has('all') || !$this->defaultPerPage ? $query->get() : $query->paginate($perPage);
+
+        $resourceCollectionClass = $this->resourceCollection();
+        $ref = new \ReflectionClass($this->resourceCollection());
+        return $ref->isSubclassOf(ResourceCollection::class)
+            ? new $resourceCollectionClass($data)
+            : $resourceCollectionClass::collection($data);
     }
 
     public function store(Request $request) {
@@ -36,7 +63,7 @@ abstract class BasicCrudController extends Controller {
         $validationData = $this->validate($request, $this->rulesStore());
         $obj = $this->handleStore($request, $validationData);
         $obj->refresh();
-        return $obj;
+        return $this->handleResponse($obj);
     }
 
     /**
@@ -60,8 +87,18 @@ abstract class BasicCrudController extends Controller {
         return $this->model()::where($keyName, $id)->firstOrFail();
     }
 
+    /**
+     * @param $obj
+     * @return mixed
+     */
+    protected function handleResponse($obj) {
+        $resource = $this->resource();
+        return new $resource($obj);
+    }
+
     public function show($id) {
-        return $this->findOrFail($id);
+        $obj = $this->findOrFail($id);
+        return $this->handleResponse($obj);
     }
 
     public function update(Request $request, $id) {
@@ -69,7 +106,7 @@ abstract class BasicCrudController extends Controller {
         $this->request = $request;
         $validationData = $this->validate($request, $this->rulesUpdate());
         $obj = $this->handleUpdate($request, $obj, $validationData);
-        return $obj;
+        return $this->handleResponse($obj);
     }
 
     /**
@@ -94,4 +131,7 @@ abstract class BasicCrudController extends Controller {
         return response()->noContent();
     }
 
+    protected function queryBuilder(): Builder {
+        return $this->model()::query();
+    }
 }

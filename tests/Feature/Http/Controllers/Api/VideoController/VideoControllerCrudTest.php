@@ -160,15 +160,15 @@ class VideoControllerCrudTest extends BaseVideoControllerTestCase {
 
         $data = [
             [
-                'send_data' => $this->sendData + ['categories_id' => [$category->id], 'genres_id' => [$genre->id]],
+                'send_data' => $this->sendData + $this->sendDataRelation,
                 'test_data' => $this->sendData + ['opened' => false]
             ],
             [
-                'send_data' => $this->sendData + ['opened' => true, 'categories_id' => [$category->id], 'genres_id' => [$genre->id]],
+                'send_data' => $this->sendData + ['opened' => true] + $this->sendDataRelation,
                 'test_data' => $this->sendData + ['opened' => true]
             ],
             [
-                'send_data' => $this->sendData + ['rating' => Video::RATING_LIST[1], 'categories_id' => [$category->id], 'genres_id' => [$genre->id]],
+                'send_data' => $this->sendData + ['rating' => Video::RATING_LIST[1]] + $this->sendDataRelation,
                 'test_data' => $this->sendData + ['rating' => Video::RATING_LIST[1]]
             ]
         ];

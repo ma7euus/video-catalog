@@ -264,6 +264,13 @@ class GenreControllerTest extends TestCase {
         return get_class($this->genre);
     }
 
+    protected function assertRelation($genreId, $categoryId) {
+        $this->assertDatabaseHas('category_genre', [
+            'genre_id' => $genreId,
+            'category_id' => $categoryId
+        ]);
+    }
+
     public function testSyncRelations() {
         $sendData = [
             'name' => 'test'

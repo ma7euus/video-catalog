@@ -12,7 +12,8 @@ class GenreResource extends JsonResource {
      * @return array
      */
     public function toArray($request) {
-        return [
+        $default = parent::toArray($request);
+        $newFields = [
             'id' => $this->id,
             'name' => $this->name,
             'is_active' => $this->is_active,
@@ -21,5 +22,6 @@ class GenreResource extends JsonResource {
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at
         ];
+        return array_merge($default, $newFields);
     }
 }

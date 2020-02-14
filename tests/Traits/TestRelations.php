@@ -24,23 +24,23 @@ trait TestRelations {
             $sendData[$table['main_table_key_relation']] = [$ids[0]];
             $response = $this->json('POST', $this->routeStore(), $sendData);
             $this->assertDatabaseHas($table['table'], [
-                $table['main_key'] => $response->json('id'),
+                $table['main_key'] => $response->json('data.id'),
                 $table['relation_key'] => $ids[0]
             ]);
 
             $sendData[$table['main_table_key_relation']] = [$ids[1], $ids[2]];
             $response = $this->json('PUT', $this->routeUpdate($response->json('id')), $sendData);
             $this->assertDatabaseMissing($table['table'], [
-                $table['main_key'] => $response->json('id'),
+                $table['main_key'] => $response->json('data.id'),
                 $table['relation_key'] => $ids[0]
             ]);
 
             $this->assertDatabaseHas($table['table'], [
-                $table['main_key'] => $response->json('id'),
+                $table['main_key'] => $response->json('data.id'),
                 $table['relation_key'] => $ids[1]
             ]);
             $this->assertDatabaseHas($table['table'], [
-                $table['main_key'] => $response->json('id'),
+                $table['main_key'] => $response->json('data.id'),
                 $table['relation_key'] => $ids[2]
             ]);
         }

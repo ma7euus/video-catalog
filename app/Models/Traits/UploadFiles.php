@@ -11,7 +11,7 @@ trait UploadFiles {
 
     protected abstract function uploadDir();
 
-    public static function bootUploadFilesTrait() {
+    public static function bootUploadFiles() {
         static::updating(function (Model $model) {
             $fieldsUpdated = array_keys($model->getDirty());
             $filesUpdated = array_intersect($fieldsUpdated, self::$fileFields);

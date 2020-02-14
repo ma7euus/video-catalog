@@ -40,7 +40,9 @@ class GenreControllerTest extends TestCase {
 
     protected function setUp(): void {
         parent::setUp();
-        $this->genre = factory(Genre::class)->create();
+        $this->genre = factory(Genre::class)->create([
+            'is_active' => true
+        ]);
 
         $category = factory(Category::class)->create();
         $this->sendData = [
@@ -276,7 +278,7 @@ class GenreControllerTest extends TestCase {
             'name' => 'test'
         ];
 
-        $this->syncRelations($sendData);
+        $this->syncRelations($sendData + $this->sendData);
     }
 
     /**

@@ -51,6 +51,7 @@ class VideoUploadTest extends BaseVideoCrudTest {
 
     public function testUpdateWithFiles() {
         \Storage::fake();
+        /** @var Video $video */
         $video = factory(Video::class)->create();
         $thumbFile = UploadedFile::fake()->image('thumb.jpg');
         $videoFile = UploadedFile::fake()->create('video.mp4');

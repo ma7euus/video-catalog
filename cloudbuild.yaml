@@ -1,15 +1,5 @@
 steps:
 
-  - id: "Rodando docker-compose"
-    name: "gcr.io/$PROJECT_ID/docker-compose:1.24.0"
-    args: ['-f', 'docker-compose.prod.yaml', 'up', '-d']
-    env:
-      - GOOGLE_CLOUD_PROJECT_ID=$PROJECT_ID
-      - GOOGLE_CLOUD_KEY_FILE=service-account-storage.json
-      - GOOGLE_CLOUD_STORAGE_BUCKET=video-catalog-storage
-      - GOOGLE_CLOUD_STORAGE_API_URI=https://storage.cloud.google.com/video-catalog-storage
-      - TESTING_PROD=true
-
   - id: "Descriptografando service account storage"
     name: "gcr.io/cloud-builders/gcloud"
     args:
@@ -20,6 +10,16 @@ steps:
       - --location=global
       - --keyring=testing-lesson
       - --key=service-account
+      
+  - id: "Rodando docker-compose"
+    name: "gcr.io/$PROJECT_ID/docker-compose:1.24.0"
+    args: ['-f', 'docker-compose.prod.yaml', 'up', '-d']
+    env:
+      - GOOGLE_CLOUD_PROJECT_ID=$PROJECT_ID
+      - GOOGLE_CLOUD_KEY_FILE=service-account-storage.json
+      - GOOGLE_CLOUD_STORAGE_BUCKET=video-catalog-storage
+      - GOOGLE_CLOUD_STORAGE_API_URI=https://storage.cloud.google.com/video-catalog-storage
+      - TESTING_PROD=true
 
   - id: "Rodando composer"
     name: "gcr.io/cloud-builders/docker"

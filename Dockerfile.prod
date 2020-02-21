@@ -1,7 +1,19 @@
-FROM php:7.3.6-fpm-alpine3.9
+FROM php:7.3.6-fpm-alpine3.10
 
-RUN apk add --no-cache openssl bash mysql-client nodejs npm
+RUN apk add --no-cache openssl \
+    bash \
+    mysql-client \
+    nodejs \
+    npm \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev
+
+RUN touch /root/.bashrc | echo "PS1='\w\$ '" >> /root/.bashrc
+
 RUN docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include --with-jpeg-dir=/usr/include --with-png-dir=/usr/include
+RUN docker-php-ext-install -j$(nproc) gd
 
 ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
@@ -11,7 +23,20 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 WORKDIR /var/www
 RUN rm -rf /var/www/html
 
+COPY . .
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN apk add docker openrc py-pip
+RUN rc-update add docker boot
+
+RUN apk add python-dev libffi-dev openssl-dev gcc libc-dev make
+
+RUN pip install docker-compose
+
+#RUN curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+#RUN chmod +x /usr/local/bin/docker-compose
+#RUN ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 RUN ln -s public html
 

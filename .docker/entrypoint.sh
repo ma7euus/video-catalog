@@ -11,6 +11,8 @@ php artisan ide-helper:model > /dev/null << EOF
 <no>
 EOF
 
+php artisan storage:link
+
 chmod -R 777 ./
 
 php-fpm

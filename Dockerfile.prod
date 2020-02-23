@@ -23,20 +23,9 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 WORKDIR /var/www
 RUN rm -rf /var/www/html
 
-COPY . .
+#COPY . .
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-RUN apk add docker openrc py-pip
-RUN rc-update add docker boot
-
-RUN apk add python-dev libffi-dev openssl-dev gcc libc-dev make
-
-RUN pip install docker-compose
-
-#RUN curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-#RUN chmod +x /usr/local/bin/docker-compose
-#RUN ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 RUN ln -s public html
 

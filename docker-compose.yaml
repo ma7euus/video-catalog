@@ -34,7 +34,7 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - .:/var/www
+      - ./backend:/var/www
     networks:
       - app-network
     depends_on:

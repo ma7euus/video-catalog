@@ -23,8 +23,8 @@ php artisan ide-helper:model > /dev/null << EOF
 <no>
 EOF
 
-if [ ! -L "/var/www/backend/public/storage" ]; then
-  php /var/www/backend/artisan storage:link
+if [ ! -L "public/storage" ]; then
+  php artisan storage:link
 fi
 
 chmod -R 777 ./

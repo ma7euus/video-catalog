@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react';
 import {AppBar, makeStyles, Button, Toolbar, Typography, Theme} from "@material-ui/core";
 import logo from '../../static/img/logo.png';

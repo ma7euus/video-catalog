@@ -37,14 +37,14 @@ const Table = (props: Props) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        httpVideo.get('categories').then(
+        httpVideo.get('genres').then(
             response => setData(response.data.data)
         );
     }, []);
 
     return (
         <MUIDataTable
-            title="Listagem de categorias"
+            title="Listagem de Gêneros"
             columns={columnsDefinition}
             data={data}
         />

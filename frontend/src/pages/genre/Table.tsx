@@ -12,11 +12,13 @@ const columnsDefinition: MUIDataTableColumn[] = [
         label: "Nome",
     },
     {
-        name: "is_active",
-        label: "Ativo?",
+        name: "categories",
+        label: "Categorias",
         options: {
-            customBodyRender(value, tableMeta, updateValue): any {
-                return value ? <Chip label="Sim" color="primary"/> : <Chip label="Não" color="secondary"/>;
+            customBodyRender(value, tableMeta, updateValue) {
+                return value.map(
+                    value => <Chip label={value.name} color="default"/>
+                );
             }
         }
     },

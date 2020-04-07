@@ -2,7 +2,7 @@ import {RouteProps} from 'react-router-dom';
 import Dashboard from "../pages/Dashboard";
 import CategoryList from "../pages/category/PageList";
 import GenreList from "../pages/genre/PageList";
-import CastMembersList from "../pages/cast_member/PageList";
+import CastMembersList from "../pages/cast-member/PageList";
 
 export interface AppRouteProps extends RouteProps {
     name: string;

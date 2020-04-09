@@ -4,7 +4,7 @@ import {Form} from "./Form";
 
 const PageForm = () => {
     return (
-        <Page title={'Cadastrar Categoria'}>
+        <Page title={'Cadastrar Gênero'}>
             <Form/>
         </Page>
 

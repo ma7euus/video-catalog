@@ -3,7 +3,9 @@ import Dashboard from "../pages/Dashboard";
 import CategoryList from "../pages/category/PageList";
 import CategoryForm from "../pages/category/PageForm";
 import GenreList from "../pages/genre/PageList";
+import GenreForm from "../pages/genre/PageForm";
 import CastMembersList from "../pages/cast-member/PageList";
+import CastMembersForm from "../pages/cast-member/PageForm";
 
 export interface AppRouteProps extends RouteProps {
     name: string;
@@ -27,7 +29,7 @@ const routes: AppRouteProps[] = [
     },
     {
         name: 'categories.create',
-        label: 'Criar Categoria',
+        label: 'Cadastrar Categoria',
         path: '/categories/create',
         component: CategoryForm,
         exact: true
@@ -48,16 +50,16 @@ const routes: AppRouteProps[] = [
     },
     {
         name: 'genres.create',
-        label: 'Criar Gênero',
+        label: 'Cadastrar Gênero',
         path: '/genres/create',
-        component: GenreList,
+        component: GenreForm,
         exact: true
     },
     {
         name: 'genres.edit',
         label: 'Editar Gênero',
         path: '/genres/:id/edit',
-        component: GenreList,
+        component: GenreForm,
         exact: true
     },
     {
@@ -69,16 +71,16 @@ const routes: AppRouteProps[] = [
     },
     {
         name: 'cast_members.create',
-        label: 'Criar Membros do Elenco',
+        label: 'Cadastrar Membros do Elenco',
         path: '/cast_members/create',
-        component: CastMembersList,
+        component: CastMembersForm,
         exact: true
     },
     {
         name: 'cast_members.edit',
         label: 'Editar Membros do Elenco',
         path: '/cast_members/:id/edit',
-        component: CastMembersList,
+        component: CastMembersForm,
         exact: true
     }
 ];

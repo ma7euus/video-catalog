@@ -28,6 +28,12 @@ const palette: PaletteOptions = {
 const theme = createMuiTheme({
     palette,
     overrides: {
+        MuiChip: {
+          root: {
+              marginRight: '3px',
+              color: '#646464',
+          },
+        },
         MUIDataTable: {
             paper: {
                 boxShadow: 'none',

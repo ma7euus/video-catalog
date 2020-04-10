@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Chip, createMuiTheme, MuiThemeProvider} from '@material-ui/core';
+import {Chip, createMuiTheme, MuiThemeProvider, PropTypes} from '@material-ui/core';
 import theme from '../../theme';
 
 const localTheme = createMuiTheme({
@@ -21,8 +21,14 @@ export const BadgeNo = () => (
     </MuiThemeProvider>
 );
 
-export const Badge = () => (
-    <MuiThemeProvider theme={localTheme}>
-        <Chip label="Não" color="secondary"/>
+
+type BadgeProps = {
+    label: string,
+    color?: PropTypes.Color
+};
+
+export const Badge = (props: BadgeProps) => (
+    <MuiThemeProvider theme={theme}>
+        <Chip label={props.label} color={props.color === undefined ? "default" : props.color}/>
     </MuiThemeProvider>
 );

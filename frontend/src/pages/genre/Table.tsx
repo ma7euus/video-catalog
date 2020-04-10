@@ -1,10 +1,10 @@
 import * as React from 'react';
 import MUIDataTable, {MUIDataTableColumn} from "mui-datatables";
 import {useEffect, useState} from "react";
-import {Chip} from "@material-ui/core";
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
 import genreHttp from "../../util/http/genre-http";
+import {Badge as CustomBadge} from "../../components/Badge";
 
 const columnsDefinition: MUIDataTableColumn[] = [
     {
@@ -17,7 +17,7 @@ const columnsDefinition: MUIDataTableColumn[] = [
         options: {
             customBodyRender(value, tableMeta, updateValue) {
                 return value.map(
-                    value => <Chip label={value.name} color="default"/>
+                    value => <CustomBadge label={value.name}/>
                 );
             }
         }

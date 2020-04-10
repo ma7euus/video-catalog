@@ -8,9 +8,10 @@ import Table from "./Table";
 const PageList = () => {
     return (
         <Page title="Listagem de Membros do Elenco">
-            <Box dir={'rtl'}>
+            <Box dir={'rtl'} paddingBottom={2}>
                 <Fab
                     title={"Adicionar Membro do Elenco"}
+                    color={"secondary"}
                     size={"small"}
                     component={Link}
                     to={"cast_members/create"}

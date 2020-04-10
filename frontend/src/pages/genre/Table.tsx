@@ -16,8 +16,9 @@ const columnsDefinition: MUIDataTableColumn[] = [
         label: "Categorias",
         options: {
             customBodyRender(value, tableMeta, updateValue) {
+                let key = 0;
                 return value.map(
-                    value => <CustomBadge label={value.name}/>
+                    value => <CustomBadge key={key++} label={value.name}/>
                 );
             }
         }

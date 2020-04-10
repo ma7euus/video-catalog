@@ -24,11 +24,16 @@ export const BadgeNo = () => (
 
 type BadgeProps = {
     label: string,
-    color?: PropTypes.Color
+    color?: PropTypes.Color,
 };
 
 export const Badge = (props: BadgeProps) => (
-    <MuiThemeProvider theme={theme}>
-        <Chip label={props.label} color={props.color === undefined ? "default" : props.color}/>
+    <MuiThemeProvider
+        theme={theme}
+    >
+        <Chip
+            label={props.label}
+            color={'color' in props ? props.color : "default"}
+        />
     </MuiThemeProvider>
 );

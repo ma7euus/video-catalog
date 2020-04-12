@@ -3,7 +3,7 @@ import {
     Box,
     Button,
     ButtonProps,
-    FormControl, FormControlLabel,
+    FormControl, FormControlLabel, FormHelperText,
     FormLabel, Radio,
     RadioGroup,
     TextField,
@@ -13,6 +13,9 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useForm} from "react-hook-form";
 import castMemberHttp from "../../util/http/cast-member-http";
 import {useEffect} from "react";
+import * as Yup from "../../util/vendor/yup";
+import {useParams, useHistory} from "react-router";
+import {useSnackbar} from "notistack";
 
 const useStyles = makeStyles((theme: Theme) => {
     return {
@@ -22,25 +25,100 @@ const useStyles = makeStyles((theme: Theme) => {
     }
 });
 
+const validationSchema = Yup.object().shape({
+    name: Yup.string()
+        .label('Nome')
+        .max(255)
+        .required(),
+    type: Yup.string()
+        .label('Tipo')
+        .required(),
+});
+
 export const Form = () => {
     const classes = useStyles();
+
+    const {register, handleSubmit, getValues, setValue, errors, reset, watch} = useForm({
+        validationSchema
+    });
+
+    const snackbar = useSnackbar();
+    const history = useHistory();
+    const {id} = useParams();
+    const [castMember, setCastMember] = React.useState<any | null>(null);
+    const [loading, setLoading] = React.useState<boolean>(false);
+    const handleChange = event => setValue('type', parseInt(event.target.value));
 
     const buttonProps: ButtonProps = {
         className: classes.submit,
         color: "secondary",
         variant: "contained",
+        disabled: loading,
     };
-
-    const {register, handleSubmit, getValues, setValue} = useForm();
 
     useEffect(() => {
         register({name: "type"})
     }, [register]);
 
-    function onSubmit(formData) {
-        castMemberHttp
-            .create(formData)
-            .then((response) => console.log(response));
+    React.useEffect(() => {
+        let isSubscribed = true;
+
+        if (!id) {
+            return
+        }
+
+        (async () => {
+            setLoading(true)
+
+            try {
+                const {data} = await castMemberHttp.get(id)
+                if (isSubscribed) {
+                    setCastMember(data.data)
+                    reset(data.data)
+                }
+            } catch (error) {
+                console.error(error)
+                snackbar.enqueueSnackbar('Não foi possível carregar as informações.', {
+                    variant: 'error'
+                })
+            } finally {
+                setLoading(false)
+            }
+        })()
+
+        return () => {
+            isSubscribed = false
+        }
+    }, [id, reset, snackbar]);
+
+    async function onSubmit(formData, event) {
+        setLoading(true)
+
+        try {
+            const http = !castMember ? castMemberHttp.create(formData) : castMemberHttp.update(castMember.id, formData)
+            const {data} = await http
+
+            snackbar.enqueueSnackbar('Membro de elenco salvo com sucesso!', {
+                variant: 'success'
+            })
+
+            setTimeout(() => {
+                event
+                    ? (
+                        id
+                            ? history.replace(`/cast-members/${data.data.id}/edit`)
+                            : history.push(`/cast-members/${data.data.id}/edit`)
+                    ) : history.push('/cast-members')
+            })
+
+        } catch (error) {
+            console.error(error)
+            snackbar.enqueueSnackbar('Não foi possível salvar o membro de elenco :(', {
+                variant: 'error'
+            })
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -51,20 +129,41 @@ export const Form = () => {
                 fullWidth
                 variant={"outlined"}
                 inputRef={register}
+                disabled={loading}
+                error={errors.name !== undefined}
+                helperText={errors.name && errors.name.message}
+                InputLabelProps={{shrink: true}}
             />
-            <FormControl margin={"normal"}>
+            <FormControl
+                margin="normal"
+                error={errors.type !== undefined}
+                disabled={loading}
+            >
                 <FormLabel component="legend">Tipo</FormLabel>
                 <RadioGroup
+                    defaultValue="1"
+                    aria-label="type"
                     name="type"
-                    onChange={(e) => {
-                        setValue('type', parseInt(e.target.value));
-                    }}>
-                    <FormControlLabel value={"1"} control={<Radio color={"primary"}/>} label={"Diretor"}/>
-                    <FormControlLabel value={"2"} control={<Radio color={"primary"}/>} label={"Ator"}/>
+                    onChange={handleChange}
+                    value={watch('type') + ""}
+                >
+                    <FormControlLabel
+                        value="1"
+                        label="Diretor"
+                        control={<Radio/>}
+                    />
+                    <FormControlLabel
+                        value="2"
+                        label="Ator"
+                        control={<Radio/>}
+                    />
                 </RadioGroup>
+                {
+                    errors.type && <FormHelperText id="type-helper-text">{errors.type.message}</FormHelperText>
+                }
             </FormControl>
             <Box dir={"rtl"}>
-                <Button {...buttonProps} onClick={() => onSubmit(getValues())}>Salvar</Button>
+                <Button {...buttonProps} onClick={() => onSubmit(getValues(), null)}>Salvar</Button>
                 <Button {...buttonProps} type="submit">Salvar e continuar editando</Button>
             </Box>
         </form>

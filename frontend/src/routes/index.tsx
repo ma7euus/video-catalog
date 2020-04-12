@@ -65,21 +65,21 @@ const routes: AppRouteProps[] = [
     {
         name: 'cast_members.list',
         label: 'Listar Membros do Elenco',
-        path: '/cast_members',
+        path: '/cast-members',
         component: CastMembersList,
         exact: true
     },
     {
         name: 'cast_members.create',
         label: 'Cadastrar Membros do Elenco',
-        path: '/cast_members/create',
+        path: '/cast-members/create',
         component: CastMembersForm,
         exact: true
     },
     {
         name: 'cast_members.edit',
         label: 'Editar Membros do Elenco',
-        path: '/cast_members/:id/edit',
+        path: '/cast-members/:id/edit',
         component: CastMembersForm,
         exact: true
     }

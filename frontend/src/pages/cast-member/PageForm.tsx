@@ -7,7 +7,7 @@ const PageForm = () => {
     const {id} = useParams();
 
     return (
-        <Page title={!id ? 'Editar Membro do Elenco' : 'Cadastrar Membro do Elenco'}>
+        <Page title={!id ? 'Cadastrar Membro do Elenco' : 'Editar Membro do Elenco'}>
             <Form/>
         </Page>
 

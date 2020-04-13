@@ -113,7 +113,7 @@ export const Form = () => {
 
         } catch (error) {
             console.error(error)
-            snackbar.enqueueSnackbar('Não foi possível salvar o membro de elenco :(', {
+            snackbar.enqueueSnackbar('Não foi possível salvar o membro do elenco', {
                 variant: 'error'
             })
         } finally {

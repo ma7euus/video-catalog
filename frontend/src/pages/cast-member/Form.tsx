@@ -68,35 +68,34 @@ export const Form = () => {
         }
 
         (async () => {
-            setLoading(true)
+            setLoading(true);
 
             try {
-                const {data} = await castMemberHttp.get(id)
+                const {data} = await castMemberHttp.get(id);
                 if (isSubscribed) {
-                    setCastMember(data.data)
-                    reset(data.data)
+                    setCastMember(data.data);
+                    reset(data.data);
                 }
             } catch (error) {
-                console.error(error)
+                console.error(error);
                 snackbar.enqueueSnackbar('Não foi possível carregar as informações.', {
                     variant: 'error'
                 })
             } finally {
-                setLoading(false)
+                setLoading(false);
             }
-        })()
+        })();
 
         return () => {
-            isSubscribed = false
+            isSubscribed = false;
         }
     }, [id, reset, snackbar]);
 
     async function onSubmit(formData, event) {
-        setLoading(true)
-
+        setLoading(true);
         try {
-            const http = !castMember ? castMemberHttp.create(formData) : castMemberHttp.update(castMember.id, formData)
-            const {data} = await http
+            const http = !castMember ? castMemberHttp.create(formData) : castMemberHttp.update(castMember.id, formData);
+            const {data} = await http;
 
             snackbar.enqueueSnackbar('Membro de elenco salvo com sucesso!', {
                 variant: 'success'
@@ -108,7 +107,7 @@ export const Form = () => {
                         id
                             ? history.replace(`/cast-members/${data.data.id}/edit`)
                             : history.push(`/cast-members/${data.data.id}/edit`)
-                    ) : history.push('/cast-members')
+                    ) : history.push('/cast-members');
             })
 
         } catch (error) {
@@ -117,7 +116,7 @@ export const Form = () => {
                 variant: 'error'
             })
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     }
 

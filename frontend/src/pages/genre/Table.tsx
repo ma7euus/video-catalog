@@ -40,9 +40,16 @@ const Table = (props: Props) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        genreHttp.list().then(
-            ({data}) => setData(data.data)
-        );
+        let isSubscribed = true;
+        (async () => {
+            const {data} = await genreHttp.list();
+            if (isSubscribed) {
+                setData(data.data);
+            }
+        })();
+        return () => {
+            isSubscribed = false;
+        }
     }, []);
 
     return (

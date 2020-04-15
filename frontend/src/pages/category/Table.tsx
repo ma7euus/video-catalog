@@ -44,9 +44,17 @@ const Table = (props: Props) => {
     const [data, setData] = useState<Category[]>([]);
 
     useEffect(() => {
-        categoryHttp.list<{ data: Category[] }>().then(
-            ({data}) => setData(data.data)
-        );
+        let isSubscribed = true;
+        (async () => {
+            const {data} = await categoryHttp.list();
+            if (isSubscribed) {
+                setData(data.data);
+            }
+        })();
+
+        return () => {
+            isSubscribed = false;
+        }
     }, []);
 
     return (

@@ -17,12 +17,12 @@ const DefaultForm: React.FC<DefaultFormProps> = ({
                                                      GridContainerProps,
                                                      GridItemProps,
                                                      children,
-                                                     ...rest
+                                                     ...otherProps
                                                  }: DefaultFormProps) => {
     const classes = useStyles();
 
     return (
-        <form {...rest}>
+        <form {...otherProps}>
             <Grid container {...GridContainerProps}>
                 <Grid item className={classes.gridItem} {...GridItemProps}>
                     {children}

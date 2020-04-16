@@ -8,6 +8,7 @@ import {useParams, useHistory} from "react-router";
 import {useSnackbar} from "notistack";
 import {Category, GetResponse} from "../../util/models";
 import SubmitActions from "../../components/SubmitActions";
+import DefaultForm from "../../components/DefaultForm";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -105,7 +106,9 @@ export const Form: React.FC = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <DefaultForm
+            GridItemProps={{xs: 12, md: 6}}
+            onSubmit={handleSubmit(onSubmit)}>
             <TextField
                 name="name"
                 label="Nome"
@@ -151,6 +154,6 @@ export const Form: React.FC = () => {
                                })
                            }
             />
-        </form>
+        </DefaultForm>
     );
 };

@@ -6,7 +6,7 @@ import MuiBreadcrumbs from '@material-ui/core/Breadcrumbs';
 import {Route} from 'react-router';
 import {Link as RouterLink} from 'react-router-dom';
 import {Location} from 'history';
-import routes from "../routes";
+import routes from "../../routes";
 import RouteParser from 'route-parser';
 import {Box, Container} from "@material-ui/core";
 

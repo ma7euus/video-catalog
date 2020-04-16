@@ -4,9 +4,9 @@ import {Navbar} from "./components/Navbar";
 import {Box, CssBaseline, MuiThemeProvider} from "@material-ui/core";
 import {BrowserRouter} from "react-router-dom";
 import AppRouter from "./routes/AppRouter";
-import Breadcrumbs from "./components/Breadcrumbs";
 import theme from "./theme";
 import {SnackbarProvider} from "./components/SnackbarProvider";
+import Breadcrumbs from "./components/Breadcrumbs";
 
 function App() {
     return (

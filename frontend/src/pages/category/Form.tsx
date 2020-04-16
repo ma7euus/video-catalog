@@ -7,6 +7,7 @@ import * as Yup from '../../util/vendor/yup';
 import {useEffect, useState} from "react";
 import {useParams, useHistory} from "react-router";
 import {useSnackbar} from "notistack";
+import {Category, GetResponse} from "../../util/models";
 
 const useStyles = makeStyles((theme: Theme) => {
     return {
@@ -45,7 +46,7 @@ export const Form: React.FC = () => {
     const snackbar = useSnackbar();
     const history = useHistory();
     const {id} = useParams();
-    const [category, setCategory] = useState<{ id: string } | null>(null);
+    const [category, setCategory] = useState<Category | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
     const buttonProps: ButtonProps = {
@@ -69,7 +70,7 @@ export const Form: React.FC = () => {
         (async () => {
             setLoading(true);
             try {
-                const {data} = await categoryHttp.get(id);
+                const {data} = await categoryHttp.get<GetResponse<Category>>(id);
                 if (isSubscribed) {
                     setCategory(data.data);
                     reset(data.data);

@@ -8,6 +8,7 @@ import categoryHttp from "../../util/http/category-http";
 import * as Yup from "../../util/vendor/yup";
 import {useParams, useHistory} from "react-router";
 import {useSnackbar} from "notistack";
+import {Category, Genre} from "../../util/models";
 
 const useStyles = makeStyles((theme: Theme) => {
     return {
@@ -41,8 +42,8 @@ export const Form = () => {
     const snackbar = useSnackbar();
     const history = useHistory();
     const {id} = useParams();
-    const [genre, setGenre] = React.useState<any | null>(null);
-    const [categories, setCategories] = React.useState<any[]>([]);
+    const [genre, setGenre] = React.useState<Genre | null>(null);
+    const [categories, setCategories] = React.useState<Category[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
 
     const buttonProps: ButtonProps = {

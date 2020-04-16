@@ -16,6 +16,7 @@ import {useEffect} from "react";
 import * as Yup from "../../util/vendor/yup";
 import {useParams, useHistory} from "react-router";
 import {useSnackbar} from "notistack";
+import {CastMember} from "../../util/models";
 
 const useStyles = makeStyles((theme: Theme) => {
     return {
@@ -45,7 +46,7 @@ export const Form = () => {
     const snackbar = useSnackbar();
     const history = useHistory();
     const {id} = useParams();
-    const [castMember, setCastMember] = React.useState<any | null>(null);
+    const [castMember, setCastMember] = React.useState<CastMember | null>(null);
     const [loading, setLoading] = React.useState<boolean>(false);
     const handleChange = event => setValue('type', parseInt(event.target.value));
 

@@ -4,7 +4,7 @@ import {green, red} from '@material-ui/core/colors';
 
 const palette: PaletteOptions = {
     primary: {
-        main: '#79aec8',
+        main: '#2098d1',
         contrastText: '#ffffff',
     },
     secondary: {
@@ -16,11 +16,11 @@ const palette: PaletteOptions = {
         default: '#fafafa',
     },
     success: {
-        main: green['500'],
+        main: '#2dbf64',
         contrastText: '#ffffff',
     },
     error: {
-        main: red['500'],
+        main: '#ed5650',
         contrastText: '#ffffff',
     },
 };

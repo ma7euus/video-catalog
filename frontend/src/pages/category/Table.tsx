@@ -6,6 +6,9 @@ import parseISO from "date-fns/parseISO";
 import categoryHttp from "../../util/http/category-http";
 import {BadgeNo, BadgeYes} from "../../components/Badge";
 import {Category, ListResponse} from "../../util/models";
+import DefaultTable, {MuiDataTableRefComponent} from "../../components/DefaultTable";
+import {useSnackbar} from "notistack";
+import {FilterResetButton} from "../../components/DefaultTable/FilterResetButton";
 
 const columnsDefinition: MUIDataTableColumn[] = [
     {
@@ -32,10 +35,34 @@ const columnsDefinition: MUIDataTableColumn[] = [
     },
 ];
 
-type Props = {};
-const Table = (props: Props) => {
+const debounceTime = 300
+const debouncedSearchTime = 300
+const rowsPerPage = 15
+const rowsPerPageOptions = [10, 25, 50]
 
-    const [data, setData] = useState<Category[]>([]);
+const Table = () => {
+
+    const snackbar = useSnackbar();
+    const subscribed = React.useRef(true);
+    const [data, setData] = React.useState<Category[]>([]);
+    //  const loading = React.useContext(LoadingContext);
+    //   const {openDeleteDialog, setOpenDeleteDialog, rowsToDelete, setRowsToDelete} = useDeleteCollection();
+    const tableRef = React.useRef() as React.MutableRefObject<MuiDataTableRefComponent>;
+
+    /* const {
+         columns,
+         filterManager,
+         filterState,
+         debouncedFilterState,
+         dispatch,
+         totalRecords,
+         setTotalRecords} = useFilter({
+         columns: columnsDefinition,
+         debounceTime: debounceTime,
+         rowsPerPage,
+         rowsPerPageOptions,
+         tableRef
+     });*/
 
     useEffect(() => {
         let isSubscribed = true;
@@ -52,10 +79,36 @@ const Table = (props: Props) => {
     }, []);
 
     return (
-        <MUIDataTable
-            title="Listagem de categorias"
+        <DefaultTable
             columns={columnsDefinition}
+            title=""
             data={data}
+            //loading={loading}
+            debouncedSearchTime={debouncedSearchTime}
+            ref={tableRef}
+            options={{
+                serverSide: true,
+                //  searchText: filterState.search as any,
+                //  page: filterState.pagination.page - 1,
+                //  rowsPerPage: filterState.pagination.per_page,
+                //  count: totalRecords,
+                rowsPerPageOptions,
+                customToolbar: () => (
+                    <FilterResetButton
+                        handleClick={() => {
+                            //  filterManager.resetFilter()
+                        }}
+                    />
+                ),
+                //onSearchChange: (value) => filterManager.changeSearch(value),
+                //onChangePage:(page) => filterManager.changePage(page),
+                //onChangeRowsPerPage:(perPage) => filterManager.changeRowsPerPage(perPage),
+                //onColumnSortChange: (changedColumn: string, direction: string) => filterManager.changeColumnSort(changedColumn, direction),
+                onRowsDelete: (rowsDeleted: any[]) => {
+                    //    setRowsToDelete(rowsDeleted as any)
+                    return false
+                }
+            }}
         />
     );
 };

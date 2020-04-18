@@ -6,33 +6,65 @@ import parseISO from "date-fns/parseISO";
 import categoryHttp from "../../util/http/category-http";
 import {BadgeNo, BadgeYes} from "../../components/Badge";
 import {Category, ListResponse} from "../../util/models";
-import DefaultTable, {MuiDataTableRefComponent} from "../../components/DefaultTable";
+import DefaultTable, {MuiDataTableRefComponent, TableColumn} from "../../components/DefaultTable";
 import {useSnackbar} from "notistack";
 import {FilterResetButton} from "../../components/DefaultTable/FilterResetButton";
+import {IconButton} from "@material-ui/core";
+import {Link} from "react-router-dom";
 
-const columnsDefinition: MUIDataTableColumn[] = [
+const columnsDefinition: TableColumn[] = [
     {
-        name: "name",
-        label: "Nome",
+        name: "id",
+        label: "ID",
+        width: '30%',
+        options: {
+            sort: false
+        }
     },
     {
-        name: "is_active",
-        label: "Ativo?",
+        name: 'name',
+        label: 'Nome',
+        width: '43%'
+    },
+    {
+        name: 'is_active',
+        label: 'Ativo?',
+        width: '4%',
         options: {
-            customBodyRender(value, tableMeta, updateValue): any {
-                return value ? <BadgeYes/> : <BadgeNo/>;
+            customBodyRender(value, tableMeta, updateValue) {
+                return value ? <BadgeYes/> : <BadgeNo/>
             }
         }
     },
     {
-        name: "created_at",
-        label: "Criado em",
+        name: 'created_at',
+        label: 'Criado em',
+        width: '10%',
         options: {
-            customBodyRender(value, tableMeta, updateValue): any {
-                return <span>{format(parseISO(value), 'dd/MM/yyyy')}</span>;
+            customBodyRender(value, tableMeta, updateValue) {
+                return <span>{format(parseISO(value), 'dd/MM/yyyy')}</span>
             }
         }
     },
+    {
+        name: 'actions',
+        label: 'Ações',
+        width: '13%',
+        options: {
+            sort: false,
+            customBodyRender: (value, tableMeta) => {
+                return (
+                    <IconButton
+                        color={'secondary'}
+                        component={Link}
+                        to={`/categories/${tableMeta.rowData[0]}/edit`}
+                    >
+                    </IconButton>
+                )
+            }
+        }
+    }
+    //<EditIcon/>
 ];
 
 const debounceTime = 300

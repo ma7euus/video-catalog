@@ -64,7 +64,7 @@ const makeDefaultOptions = (debouncedSearchTime?): MUIDataTableOptions => ({
             debounceTime={debouncedSearchTime}
         />
     }
-})
+});
 
 const DefaultTable = React.forwardRef<MuiDataTableRefComponent, TableProps>((props, ref) => {
 
@@ -77,7 +77,7 @@ const DefaultTable = React.forwardRef<MuiDataTableRefComponent, TableProps>((pro
         columns.forEach((column, key) => {
             if (column.width) {
                 const overrides = theme.overrides as any
-                overrides.MUIDataTableHeadCell.fixedHeader[`&:nth-child(${key + 2})`] = {
+                overrides.MUIDataTableHeadCell.fixedHeaderCommon[`&:nth-child(${key + 2})`] = {
                     width: column.width
                 }
             }
@@ -91,7 +91,7 @@ const DefaultTable = React.forwardRef<MuiDataTableRefComponent, TableProps>((pro
     }
 
     function applyResponsive() {
-        newProps.options.responsive = isSmOrDown ? 'scrollMaxHeight' : 'stacked'
+        newProps.options.responsive = isSmOrDown ? 'scrollMaxHeight' : 'stacked';
     }
 
     function getOriginalMuiDataTableProps() {

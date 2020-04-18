@@ -23,7 +23,7 @@ abstract class DefaultModelFilter extends ModelFilter {
         }
 
         if ($this->isSortable($column)) {
-            $dir = strtolower($this->input('dir')) == 'asc' ? 'ASC' : 'DESC';
+            $dir = strtolower($this->input('dir')) == 'desc' ? 'DESC' : 'ASC';
             $this->orderBy($column, $dir);
         }
     }

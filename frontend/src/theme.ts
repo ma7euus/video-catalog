@@ -1,10 +1,10 @@
 import {createMuiTheme, SimplePaletteColorOptions} from '@material-ui/core';
 import {PaletteOptions} from '@material-ui/core/styles/createPalette';
-import {green, red} from '@material-ui/core/colors';
+//import {green, red} from '@material-ui/core/colors';
 
 const palette: PaletteOptions = {
     primary: {
-        main: '#2098d1',
+        main: '#79aec8',
         contrastText: '#ffffff',
     },
     secondary: {

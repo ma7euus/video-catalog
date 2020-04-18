@@ -75,7 +75,7 @@ abstract class BasicCrudController extends Controller {
     protected function handleStore(Request $request, $validationData) {
         /** @var Model $obj */
         $obj = \DB::transaction(function () use ($request, $validationData) {
-            return $this->handleRelations($this->model()::create($validationData), $request);
+            return $this->handleRelations($this->queryBuilder()->create($validationData), $request);
         });
         return $obj;
     }
@@ -84,7 +84,7 @@ abstract class BasicCrudController extends Controller {
         /** @var Model $model */
         $model = $this->model();
         $keyName = (new $model)->getRouteKeyName();
-        return $this->model()::where($keyName, $id)->firstOrFail();
+        return $this->queryBuilder()->where($keyName, $id)->firstOrFail();
     }
 
     /**

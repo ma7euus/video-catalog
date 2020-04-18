@@ -1,10 +1,10 @@
 import * as React from 'react';
-import MUIDataTable, {MUIDataTableColumn} from "mui-datatables";
 import {useEffect, useState} from "react";
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
 import categoryHttp from "../../util/http/category-http";
 import {BadgeNo, BadgeYes} from "../../components/Badge";
+import EditIcon from '@material-ui/icons/Edit';
 import {Category, ListResponse} from "../../util/models";
 import DefaultTable, {MuiDataTableRefComponent, TableColumn} from "../../components/DefaultTable";
 import {useSnackbar} from "notistack";
@@ -59,12 +59,12 @@ const columnsDefinition: TableColumn[] = [
                         component={Link}
                         to={`/categories/${tableMeta.rowData[0]}/edit`}
                     >
+                        <EditIcon/>
                     </IconButton>
                 )
             }
         }
     }
-    //<EditIcon/>
 ];
 
 const debounceTime = 300
@@ -77,7 +77,7 @@ const Table = () => {
     const snackbar = useSnackbar();
     const subscribed = React.useRef(true);
     const [data, setData] = React.useState<Category[]>([]);
-    //  const loading = React.useContext(LoadingContext);
+    const [loading, setLoading] = React.useState<boolean>(false);
     //   const {openDeleteDialog, setOpenDeleteDialog, rowsToDelete, setRowsToDelete} = useDeleteCollection();
     const tableRef = React.useRef() as React.MutableRefObject<MuiDataTableRefComponent>;
 
@@ -99,9 +99,20 @@ const Table = () => {
     useEffect(() => {
         let isSubscribed = true;
         (async () => {
-            const {data} = await categoryHttp.list<ListResponse<Category>>();
-            if (isSubscribed) {
-                setData(data.data);
+            try {
+                setLoading(true);
+                const {data} = await categoryHttp.list<ListResponse<Category>>();
+                if (isSubscribed) {
+                    setData(data.data);
+                }
+            } catch (error) {
+                console.log(error);
+                snackbar.enqueueSnackbar(
+                    'Não foi possível carregar as categorias',
+                    {variant: 'error'}
+                );
+            } finally {
+                setLoading(false);
             }
         })();
 
@@ -115,7 +126,7 @@ const Table = () => {
             columns={columnsDefinition}
             title=""
             data={data}
-            //loading={loading}
+            loading={loading}
             debouncedSearchTime={debouncedSearchTime}
             ref={tableRef}
             options={{

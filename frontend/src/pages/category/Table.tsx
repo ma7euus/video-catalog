@@ -9,8 +9,12 @@ import {Category, ListResponse} from "../../util/models";
 import DefaultTable, {MuiDataTableRefComponent, TableColumn} from "../../components/DefaultTable";
 import {useSnackbar} from "notistack";
 import {FilterResetButton} from "../../components/DefaultTable/FilterResetButton";
-import {IconButton} from "@material-ui/core";
+import {IconButton, MuiThemeProvider} from "@material-ui/core";
 import {Link} from "react-router-dom";
+
+interface SearchState {
+    search: string
+}
 
 const columnsDefinition: TableColumn[] = [
     {
@@ -78,6 +82,7 @@ const Table = () => {
     const subscribed = React.useRef(true);
     const [data, setData] = React.useState<Category[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
+    const [searchState, setSearchState] = React.useState<SearchState>({search: ''});
     //   const {openDeleteDialog, setOpenDeleteDialog, rowsToDelete, setRowsToDelete} = useDeleteCollection();
     const tableRef = React.useRef() as React.MutableRefObject<MuiDataTableRefComponent>;
 
@@ -97,31 +102,37 @@ const Table = () => {
      });*/
 
     useEffect(() => {
-        let isSubscribed = true;
-        (async () => {
-            try {
-                setLoading(true);
-                const {data} = await categoryHttp.list<ListResponse<Category>>();
-                if (isSubscribed) {
-                    setData(data.data);
-                }
-            } catch (error) {
-                console.log(error);
-                snackbar.enqueueSnackbar(
-                    'Não foi possível carregar as categorias',
-                    {variant: 'error'}
-                );
-            } finally {
-                setLoading(false);
-            }
-        })();
-
+        subscribed.current = true;
+        getData();
         return () => {
-            isSubscribed = false;
+            subscribed.current = false;
         }
-    }, []);
+    }, [searchState]);
+
+    async function getData() {
+        setLoading(true);
+        try {
+            const {data} = await categoryHttp.list<ListResponse<Category>>({
+                queryParams: {
+                    search: searchState.search
+                }
+            });
+            if (subscribed.current) {
+                setData(data.data);
+            }
+        } catch (error) {
+            console.log(error);
+            snackbar.enqueueSnackbar(
+                'Não foi possível carregar as categorias',
+                {variant: 'error'}
+            );
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
+        //<MuiThemeProvider theme={makeActionStyles(columnsDefinition.length - 1)}>
         <DefaultTable
             columns={columnsDefinition}
             title=""
@@ -131,7 +142,7 @@ const Table = () => {
             ref={tableRef}
             options={{
                 serverSide: true,
-                //  searchText: filterState.search as any,
+                searchText: searchState.search,
                 //  page: filterState.pagination.page - 1,
                 //  rowsPerPage: filterState.pagination.per_page,
                 //  count: totalRecords,
@@ -144,6 +155,7 @@ const Table = () => {
                     />
                 ),
                 //onSearchChange: (value) => filterManager.changeSearch(value),
+                onSearchChange: (value) => setSearchState({search: value}),
                 //onChangePage:(page) => filterManager.changePage(page),
                 //onChangeRowsPerPage:(perPage) => filterManager.changeRowsPerPage(perPage),
                 //onColumnSortChange: (changedColumn: string, direction: string) => filterManager.changeColumnSort(changedColumn, direction),
@@ -153,6 +165,7 @@ const Table = () => {
                 }
             }}
         />
+        //</MuiThemeProvider>
     );
 };
 

@@ -6,7 +6,7 @@ import categoryHttp from "../../util/http/category-http";
 import {BadgeNo, BadgeYes} from "../../components/Badge";
 import EditIcon from '@material-ui/icons/Edit';
 import {Category, ListResponse} from "../../util/models";
-import DefaultTable, {MuiDataTableRefComponent, TableColumn} from "../../components/DefaultTable";
+import DefaultTable, {makeActionStyles, MuiDataTableRefComponent, TableColumn} from "../../components/DefaultTable";
 import {useSnackbar} from "notistack";
 import {FilterResetButton} from "../../components/DefaultTable/FilterResetButton";
 import {IconButton, MuiThemeProvider} from "@material-ui/core";
@@ -132,40 +132,40 @@ const Table = () => {
     }
 
     return (
-        //<MuiThemeProvider theme={makeActionStyles(columnsDefinition.length - 1)}>
-        <DefaultTable
-            columns={columnsDefinition}
-            title=""
-            data={data}
-            loading={loading}
-            debouncedSearchTime={debouncedSearchTime}
-            ref={tableRef}
-            options={{
-                serverSide: true,
-                searchText: searchState.search,
-                //  page: filterState.pagination.page - 1,
-                //  rowsPerPage: filterState.pagination.per_page,
-                //  count: totalRecords,
-                rowsPerPageOptions,
-                customToolbar: () => (
-                    <FilterResetButton
-                        handleClick={() => {
-                            //  filterManager.resetFilter()
-                        }}
-                    />
-                ),
-                //onSearchChange: (value) => filterManager.changeSearch(value),
-                onSearchChange: (value) => setSearchState({search: value}),
-                //onChangePage:(page) => filterManager.changePage(page),
-                //onChangeRowsPerPage:(perPage) => filterManager.changeRowsPerPage(perPage),
-                //onColumnSortChange: (changedColumn: string, direction: string) => filterManager.changeColumnSort(changedColumn, direction),
-                onRowsDelete: (rowsDeleted: any[]) => {
-                    //    setRowsToDelete(rowsDeleted as any)
-                    return false
-                }
-            }}
-        />
-        //</MuiThemeProvider>
+        <MuiThemeProvider theme={makeActionStyles(columnsDefinition.length - 1)}>
+            <DefaultTable
+                columns={columnsDefinition}
+                title=""
+                data={data}
+                loading={loading}
+                debouncedSearchTime={debouncedSearchTime}
+                ref={tableRef}
+                options={{
+                    serverSide: true,
+                    searchText: searchState.search,
+                    //  page: filterState.pagination.page - 1,
+                    //  rowsPerPage: filterState.pagination.per_page,
+                    //  count: totalRecords,
+                    rowsPerPageOptions,
+                    customToolbar: () => (
+                        <FilterResetButton
+                            handleClick={() => {
+                                //  filterManager.resetFilter()
+                            }}
+                        />
+                    ),
+                    //onSearchChange: (value) => filterManager.changeSearch(value),
+                    onSearchChange: (value) => setSearchState({search: value}),
+                    //onChangePage:(page) => filterManager.changePage(page),
+                    //onChangeRowsPerPage:(perPage) => filterManager.changeRowsPerPage(perPage),
+                    //onColumnSortChange: (changedColumn: string, direction: string) => filterManager.changeColumnSort(changedColumn, direction),
+                    onRowsDelete: (rowsDeleted: any[]) => {
+                        //    setRowsToDelete(rowsDeleted as any)
+                        return false
+                    }
+                }}
+            />
+        </MuiThemeProvider>
     );
 };
 

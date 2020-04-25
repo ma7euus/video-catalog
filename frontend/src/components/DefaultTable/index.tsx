@@ -76,7 +76,7 @@ const DefaultTable = React.forwardRef<MuiDataTableRefComponent, TableProps>((pro
     function setColumnsWitdh(columns: TableColumn[]) {
         columns.forEach((column, key) => {
             if (column.width) {
-                const overrides = theme.overrides as any
+                const overrides = theme.overrides as any;
                 overrides.MUIDataTableHeadCell.fixedHeaderCommon[`&:nth-child(${key + 2})`] = {
                     width: column.width
                 }
@@ -125,3 +125,15 @@ const DefaultTable = React.forwardRef<MuiDataTableRefComponent, TableProps>((pro
 });
 
 export default DefaultTable;
+
+export function makeActionStyles(column) {
+    return theme => {
+        const copyTheme = cloneDeep<Theme>(theme);
+        const selector = `&[data-testid^="MuiDataTableBodyCell-${column}"]`;
+        (copyTheme.overrides as any).MUIDataTableBodyCell.root[selector] = {
+            paddingTop: '0px',
+            paddingBottom: '0px',
+        };
+        return copyTheme;
+    }
+}

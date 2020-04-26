@@ -18,9 +18,15 @@ interface Pagination {
     per_page: number;
 }
 
+interface Order {
+    sort: string | null;
+    dir: string | null;
+}
+
 interface SearchState {
     search: string;
     pagination: Pagination;
+    order: Order;
 }
 
 const columnsDefinition: TableColumn[] = [
@@ -96,9 +102,25 @@ const Table = () => {
             total: 0,
             per_page: 10,
         },
+        order: {
+            sort: null,
+            dir: null,
+        }
     });
     //   const {openDeleteDialog, setOpenDeleteDialog, rowsToDelete, setRowsToDelete} = useDeleteCollection();
     const tableRef = React.useRef() as React.MutableRefObject<MuiDataTableRefComponent>;
+
+    const columns = columnsDefinition.map(column => {
+        return column.name === searchState.order.sort
+            ? {
+                ...column,
+                options: {
+                    ...column.options,
+                    sortDirection: searchState.order.dir as any
+                }
+            }
+            : column;
+    });
 
     /* const {
          columns,
@@ -125,6 +147,7 @@ const Table = () => {
         searchState.search,
         searchState.pagination.page,
         searchState.pagination.per_page,
+        searchState.order,
     ]);
 
     async function getData() {
@@ -135,6 +158,8 @@ const Table = () => {
                     search: searchState.search,
                     page: searchState.pagination.page,
                     per_page: searchState.pagination.per_page,
+                    sort: searchState.order.sort,
+                    dir: searchState.order.dir,
                 }
             });
             if (subscribed.current) {
@@ -149,6 +174,9 @@ const Table = () => {
             }
         } catch (error) {
             console.log(error);
+            if(categoryHttp.isCancelledRequest(error)) {
+                return;
+            }
             snackbar.enqueueSnackbar(
                 'Não foi possível carregar as categorias',
                 {variant: 'error'}
@@ -161,7 +189,7 @@ const Table = () => {
     return (
         <MuiThemeProvider theme={makeActionStyles(columnsDefinition.length - 1)}>
             <DefaultTable
-                columns={columnsDefinition}
+                columns={columns}
                 title=""
                 data={data}
                 loading={loading}
@@ -206,7 +234,15 @@ const Table = () => {
                             }
                         })
                     )),
-                    //onColumnSortChange: (changedColumn: string, direction: string) => filterManager.changeColumnSort(changedColumn, direction),
+                    onColumnSortChange: (changedColumn: string, direction: string) => setSearchState((
+                        prevState => ({
+                            ...prevState,
+                            order: {
+                                sort: changedColumn,
+                                dir: direction.includes('desc') ? 'desc' : 'asc',
+                            }
+                        })
+                    )),
                     onRowsDelete: (rowsDeleted: any[]) => {
                         //    setRowsToDelete(rowsDeleted as any)
                         return false

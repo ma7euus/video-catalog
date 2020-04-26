@@ -12,8 +12,15 @@ import {FilterResetButton} from "../../components/DefaultTable/FilterResetButton
 import {IconButton, MuiThemeProvider} from "@material-ui/core";
 import {Link} from "react-router-dom";
 
+interface Pagination {
+    page: number;
+    total: number;
+    per_page: number;
+}
+
 interface SearchState {
-    search: string
+    search: string;
+    pagination: Pagination;
 }
 
 const columnsDefinition: TableColumn[] = [
@@ -82,7 +89,14 @@ const Table = () => {
     const subscribed = React.useRef(true);
     const [data, setData] = React.useState<Category[]>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
-    const [searchState, setSearchState] = React.useState<SearchState>({search: ''});
+    const [searchState, setSearchState] = React.useState<SearchState>({
+        search: '',
+        pagination: {
+            page: 1,
+            total: 0,
+            per_page: 10,
+        },
+    });
     //   const {openDeleteDialog, setOpenDeleteDialog, rowsToDelete, setRowsToDelete} = useDeleteCollection();
     const tableRef = React.useRef() as React.MutableRefObject<MuiDataTableRefComponent>;
 
@@ -107,18 +121,31 @@ const Table = () => {
         return () => {
             subscribed.current = false;
         }
-    }, [searchState]);
+    }, [
+        searchState.search,
+        searchState.pagination.page,
+        searchState.pagination.per_page,
+    ]);
 
     async function getData() {
         setLoading(true);
         try {
             const {data} = await categoryHttp.list<ListResponse<Category>>({
                 queryParams: {
-                    search: searchState.search
+                    search: searchState.search,
+                    page: searchState.pagination.page,
+                    per_page: searchState.pagination.per_page,
                 }
             });
             if (subscribed.current) {
                 setData(data.data);
+                setSearchState((prevState => ({
+                    ...prevState,
+                    pagination: {
+                        ...prevState.pagination,
+                        total: data.meta.total,
+                    }
+                })));
             }
         } catch (error) {
             console.log(error);
@@ -143,9 +170,9 @@ const Table = () => {
                 options={{
                     serverSide: true,
                     searchText: searchState.search,
-                    //  page: filterState.pagination.page - 1,
-                    //  rowsPerPage: filterState.pagination.per_page,
-                    //  count: totalRecords,
+                    page: searchState.pagination.page - 1,
+                    rowsPerPage: searchState.pagination.per_page,
+                    count: searchState.pagination.total,
                     rowsPerPageOptions,
                     customToolbar: () => (
                         <FilterResetButton
@@ -155,9 +182,30 @@ const Table = () => {
                         />
                     ),
                     //onSearchChange: (value) => filterManager.changeSearch(value),
-                    onSearchChange: (value) => setSearchState({search: value}),
-                    //onChangePage:(page) => filterManager.changePage(page),
-                    //onChangeRowsPerPage:(perPage) => filterManager.changeRowsPerPage(perPage),
+                    onSearchChange: (value) => setSearchState((
+                        prevState => ({
+                            ...prevState,
+                            search: value
+                        })
+                    )),
+                    onChangePage:(page) => setSearchState((
+                        prevState => ({
+                            ...prevState,
+                            pagination: {
+                                ...prevState.pagination,
+                                page: page + 1,
+                            }
+                        })
+                    )),
+                    onChangeRowsPerPage:(perPage) => setSearchState((
+                        prevState => ({
+                            ...prevState,
+                            pagination: {
+                                ...prevState.pagination,
+                                per_page: perPage,
+                            }
+                        })
+                    )),
                     //onColumnSortChange: (changedColumn: string, direction: string) => filterManager.changeColumnSort(changedColumn, direction),
                     onRowsDelete: (rowsDeleted: any[]) => {
                         //    setRowsToDelete(rowsDeleted as any)

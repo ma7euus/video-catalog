@@ -27,7 +27,7 @@ const defaultSearchStyles = theme => ({
     },
 });
 
-class DebouncedTableSearch extends React.PureComponent {
+class DebouncedTableSearch extends React.Component {
 
     constructor(props) {
         super(props);
@@ -49,7 +49,7 @@ class DebouncedTableSearch extends React.PureComponent {
         this.setState({
             text: value
         }, () => this.debouncedOnSearch(value));
-    };
+    }
 
     debouncedOnSearch = (value) => {
         this.props.onSearch(value);
@@ -86,11 +86,14 @@ class DebouncedTableSearch extends React.PureComponent {
         if (event.keyCode === 27) {
             this.props.onHide();
         }
-    };
+    }
 
     render() {
         const {classes, options, onHide, searchText} = this.props;
         let value = this.state.text;
+        if (searchText && searchText.value !== undefined) {
+            value = searchText.value;
+        }
 
         return (
             <Grow appear in={true} timeout={300}>

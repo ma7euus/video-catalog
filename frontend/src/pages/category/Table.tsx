@@ -84,18 +84,12 @@ const columnsDefinition: TableColumn[] = [
     }
 ];
 
-const debounceTime = 300
-const debouncedSearchTime = 300
-const rowsPerPage = 15
-const rowsPerPageOptions = [10, 25, 50]
+const debouncedSearchTime = 500;
+const rowsPerPageOptions = [10, 25, 50];
 
 const Table = () => {
 
-    const snackbar = useSnackbar();
-    const subscribed = React.useRef(true);
-    const [data, setData] = React.useState<Category[]>([]);
-    const [loading, setLoading] = React.useState<boolean>(false);
-    const [searchState, setSearchState] = React.useState<SearchState>({
+    const initialState: SearchState = {
         search: '',
         pagination: {
             page: 1,
@@ -106,7 +100,12 @@ const Table = () => {
             sort: null,
             dir: null,
         }
-    });
+    };
+    const snackbar = useSnackbar();
+    const subscribed = React.useRef(true);
+    const [data, setData] = React.useState<Category[]>([]);
+    const [loading, setLoading] = React.useState<boolean>(false);
+    const [searchState, setSearchState] = React.useState<SearchState>(initialState);
     //   const {openDeleteDialog, setOpenDeleteDialog, rowsToDelete, setRowsToDelete} = useDeleteCollection();
     const tableRef = React.useRef() as React.MutableRefObject<MuiDataTableRefComponent>;
 
@@ -155,7 +154,7 @@ const Table = () => {
         try {
             const {data} = await categoryHttp.list<ListResponse<Category>>({
                 queryParams: {
-                    search: searchState.search,
+                    search: cleanSearchText(searchState.search),
                     page: searchState.pagination.page,
                     per_page: searchState.pagination.per_page,
                     sort: searchState.order.sort,
@@ -174,7 +173,7 @@ const Table = () => {
             }
         } catch (error) {
             console.log(error);
-            if(categoryHttp.isCancelledRequest(error)) {
+            if (categoryHttp.isCancelledRequest(error)) {
                 return;
             }
             snackbar.enqueueSnackbar(
@@ -186,6 +185,14 @@ const Table = () => {
         }
     }
 
+    function cleanSearchText(text) {
+        let newText = text;
+        if (text && text.value !== undefined) {
+            newText = text.value;
+        }
+        return newText;
+    }
+    
     return (
         <MuiThemeProvider theme={makeActionStyles(columnsDefinition.length - 1)}>
             <DefaultTable
@@ -205,18 +212,30 @@ const Table = () => {
                     customToolbar: () => (
                         <FilterResetButton
                             handleClick={() => {
-                                //  filterManager.resetFilter()
-                            }}
+                                setSearchState({
+                                        ...initialState,
+                                        search: {
+                                            value: initialState.search,
+                                            updated: true,
+                                        } as any
+                                    }
+                                );
+                            }
+                            }
                         />
                     ),
                     //onSearchChange: (value) => filterManager.changeSearch(value),
                     onSearchChange: (value) => setSearchState((
                         prevState => ({
                             ...prevState,
-                            search: value
+                            search: value,
+                            pagination: {
+                                ...prevState.pagination,
+                                page: 1,
+                            }
                         })
                     )),
-                    onChangePage:(page) => setSearchState((
+                    onChangePage: (page) => setSearchState((
                         prevState => ({
                             ...prevState,
                             pagination: {
@@ -225,7 +244,7 @@ const Table = () => {
                             }
                         })
                     )),
-                    onChangeRowsPerPage:(perPage) => setSearchState((
+                    onChangeRowsPerPage: (perPage) => setSearchState((
                         prevState => ({
                             ...prevState,
                             pagination: {

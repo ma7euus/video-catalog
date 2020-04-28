@@ -55,7 +55,10 @@ const makeDefaultOptions = (debouncedSearchTime?): MUIDataTableOptions => ({
             deleteAria: "Excluir registros selecionados"
         }
     },
-    customSearchRender: (searchText: string, handleSearch: any, hideSearch: any, options: any) => {
+    customSearchRender: (searchText: string,
+                         handleSearch: any,
+                         hideSearch: any,
+                         options: any) => {
         return <DebouncedTableSearch
             searchText={searchText}
             onSearch={handleSearch}

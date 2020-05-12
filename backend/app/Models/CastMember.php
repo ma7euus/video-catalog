@@ -13,6 +13,11 @@ class CastMember extends Model {
     const TYPE_DIRECTOR = 1;
     const TYPE_ACTOR = 2;
 
+    public static $types = [
+        CastMember::TYPE_DIRECTOR,
+        CastMember::TYPE_ACTOR
+    ];
+
     use SoftDeletes, Uuid, Filterable;
 
     protected $fillable = ['name', 'type'];

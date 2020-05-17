@@ -1,9 +1,10 @@
 import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
+import {MuiThemeProvider} from "@material-ui/core";
 import {Link} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
 import genreHttp from '../../util/http/genre-http';
 import {formatDate} from '../../util/format';
-import DefaultTable, {MuiDataTableRefComponent, TableColumn} from '../../components/DefaultTable';
+import DefaultTable, {makeActionStyles, MuiDataTableRefComponent, TableColumn} from '../../components/DefaultTable';
 import {BadgeNo, BadgeYes} from '../../components/Badge';
 import {Category, Genre, ListResponse} from '../../util/models';
 import useFilter from '../../hooks/useFilter';
@@ -240,47 +241,49 @@ const Table: React.FC = (props: TableProps) => {
     }
 
     return (
-        <DefaultTable
-            title=""
-            columns={columns}
-            data={genres}
-            loading={loading}
-            debouncedSearchTime={DEBOUNCE_SEARCH_TIME}
-            ref={tableRef}
-            options={{
-                serverSide: true,
-                serverSideFilterList,
-                responsive: 'scrollMaxHeight',
-                searchText: filterState.search as any,
-                page: filterState.pagination.page - 1,
-                rowsPerPage: filterState.pagination.per_page,
-                rowsPerPageOptions: ROWS_PER_PAGE_OPTIONS,
-                count: totalRecords,
-                customToolbar: () => <FilterResetButton handleClick={() => filterManager.resetFilter()}/>,
-                onFilterChange: (changedColumn, filterList) => {
-                    if (changedColumn === 'is_active') {
-                        filterManager.changeExtraFilter({
-                            [changedColumn]:
-                                filterList[indexColumnIsActive][0] !== undefined
-                                    ? filterList[indexColumnIsActive][0]
-                                    : null,
-                        });
-                    }
+        <MuiThemeProvider theme={makeActionStyles(columnsDefinition.length - 1)}>
+            <DefaultTable
+                title=""
+                columns={columns}
+                data={genres}
+                loading={loading}
+                debouncedSearchTime={DEBOUNCE_SEARCH_TIME}
+                ref={tableRef}
+                options={{
+                    serverSide: true,
+                    serverSideFilterList,
+                    responsive: 'scrollMaxHeight',
+                    searchText: filterState.search as any,
+                    page: filterState.pagination.page - 1,
+                    rowsPerPage: filterState.pagination.per_page,
+                    rowsPerPageOptions: ROWS_PER_PAGE_OPTIONS,
+                    count: totalRecords,
+                    customToolbar: () => <FilterResetButton handleClick={() => filterManager.resetFilter()}/>,
+                    onFilterChange: (changedColumn, filterList) => {
+                        if (changedColumn === 'is_active') {
+                            filterManager.changeExtraFilter({
+                                [changedColumn]:
+                                    filterList[indexColumnIsActive][0] !== undefined
+                                        ? filterList[indexColumnIsActive][0]
+                                        : null,
+                            });
+                        }
 
-                    if (changedColumn === 'categories') {
-                        const columnIndex = columns.findIndex((column) => column.name === changedColumn);
-                        filterManager.changeExtraFilter({
-                            [changedColumn]: filterList[columnIndex].length ? filterList[columnIndex] : null,
-                        });
-                    }
-                },
-                onSearchChange: (value) => filterManager.changeSearch(value),
-                onChangePage: (page) => filterManager.changePage(page),
-                onChangeRowsPerPage: (perPage) => filterManager.changeRowsPerPage(perPage),
-                onColumnSortChange: (changedColumn, direction) =>
-                    filterManager.changeColumnSort(changedColumn, direction),
-            }}
-        />
+                        if (changedColumn === 'categories') {
+                            const columnIndex = columns.findIndex((column) => column.name === changedColumn);
+                            filterManager.changeExtraFilter({
+                                [changedColumn]: filterList[columnIndex].length ? filterList[columnIndex] : null,
+                            });
+                        }
+                    },
+                    onSearchChange: (value) => filterManager.changeSearch(value),
+                    onChangePage: (page) => filterManager.changePage(page),
+                    onChangeRowsPerPage: (perPage) => filterManager.changeRowsPerPage(perPage),
+                    onColumnSortChange: (changedColumn, direction) =>
+                        filterManager.changeColumnSort(changedColumn, direction),
+                }}
+            />
+        </MuiThemeProvider>
     );
 };
 

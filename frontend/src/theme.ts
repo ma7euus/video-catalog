@@ -121,7 +121,7 @@ const theme = createMuiTheme({
         },
         MUIDataTableFilterList: {
             chip: {
-                marginBottom: '8px',
+                marginBottom: '16px',
             },
         },
     },

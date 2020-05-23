@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CircularProgress, TextField, TextFieldProps } from '@material-ui/core';
-import { Autocomplete, AutocompleteProps, UseAutocompleteSingleProps } from '@material-ui/lab';
+import { Autocomplete, AutocompleteProps, UseAutocompleteProps } from '@material-ui/lab';
 import { useDebounce } from 'use-debounce';
 
 interface AsyncAutocompleteProps {
@@ -8,7 +8,7 @@ interface AsyncAutocompleteProps {
   debounceTime?: number;
   TextFieldProps?: TextFieldProps;
   AutocompleteProps?: Omit<
-    Omit<AutocompleteProps<any> & UseAutocompleteSingleProps<any>, 'renderInput'>,
+    Omit<AutocompleteProps<any, any, any, any> & UseAutocompleteProps<any, any, any, any>, 'renderInput'>,
     'options'
   >;
 }
@@ -29,7 +29,7 @@ const AsyncAutocomplete: React.FC<AsyncAutocompleteProps> = (props) => {
     ...(props.TextFieldProps && { ...props.TextFieldProps }),
   };
 
-  const autoCompleteProps: AutocompleteProps<any> = {
+  const autoCompleteProps: AutocompleteProps<any, any, any, any> = {
     loadingText: 'Carregando...',
     noOptionsText: 'Nenhum item encontrado',
     ...(props.AutocompleteProps && { ...props.AutocompleteProps }),

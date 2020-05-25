@@ -1,16 +1,25 @@
 <?php
 
-use App\Models\Genre;
-use App\Models\Video;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
-use Illuminate\Http\UploadedFile;
 
 class VideoTableSeeder extends Seeder {
+    /**
+     * @var \Illuminate\Database\Eloquent\Collection
+     */
     private $allGenres;
+
+    /**
+     * @var \Illuminate\Database\Eloquent\Collection
+     */
+    private $allCastMembers;
+
+    /**
+     * @var array
+     */
     private $relations = [
         'genres_id' => [],
-        'categories_id' => []
+        'categories_id' => [],
+        'cast_members_id' => [],
     ];
 
     /**
@@ -20,17 +29,20 @@ class VideoTableSeeder extends Seeder {
      */
     public function run() {
         $dir = \Storage::getDriver()->getAdapter()->getPathPrefix();
-        \File::deleteDirectories($dir, true);
+        \File::deleteDirectory($dir, true);
 
         $self = $this;
-        $this->allGenres = Genre::all();
-        Model::reguard();
+        $this->allGenres = \App\Models\Genre::all();
+        $this->allCastMembers = \App\Models\CastMember::all();
 
-        factory(Video::class, 100)
+        \Illuminate\Database\Eloquent\Model::reguard(); // mass assignment
+
+        factory(\App\Models\Video::class, 10)
             ->make()
-            ->each(function ($video) use ($self) {
+            ->each(function (\App\Models\Video $video) use ($self) {
                 $self->fetchRelations();
-                Video::create(
+
+                \App\Models\Video::create(
                     array_merge(
                         $video->toArray(),
                         [
@@ -40,13 +52,13 @@ class VideoTableSeeder extends Seeder {
                             'video_file' => $self->getVideoFile(),
                         ],
                         $this->relations
-                    )
-                );
+                    ));
             });
-        Model::unguard();
+
+        \Illuminate\Database\Eloquent\Model::unguard();
     }
 
-    protected function fetchRelations() {
+    public function fetchRelations() {
         $subGenres = $this->allGenres->random(5)->load('categories');
         $categoriesId = [];
 
@@ -58,14 +70,14 @@ class VideoTableSeeder extends Seeder {
         $genresId = $subGenres->pluck('id')->toArray();
         $this->relations['categories_id'] = $categoriesId;
         $this->relations['genres_id'] = $genresId;
-
+        $this->relations['cast_members_id'] = $this->allCastMembers->random(3)->pluck('id')->toArray();
     }
 
     public function getImageFile() {
-        return new UploadedFile(storage_path('faker/thumbs/default.png'), 'default.png');
+        return new \Illuminate\Http\UploadedFile(storage_path('faker/thumbs/default.png'), 'thumb.jpg');
     }
 
     public function getVideoFile() {
-        return new UploadedFile(storage_path('faker/videos/SampleVideo.mp4'), 'SampleVideo.mp4');
+        return new \Illuminate\Http\UploadedFile(storage_path('faker/videos/SampleVideo.mp4'), 'video.mp4');
     }
 }

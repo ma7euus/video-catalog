@@ -2,7 +2,6 @@
 
 namespace App\ModelFilters;
 
-
 use Illuminate\Database\Eloquent\Builder;
 
 class GenreFilter extends DefaultModelFilter {

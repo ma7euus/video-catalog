@@ -2,7 +2,6 @@
 
 namespace App\ModelFilters;
 
-
 use App\Models\CastMember;
 
 class CastMemberFilter extends DefaultModelFilter {

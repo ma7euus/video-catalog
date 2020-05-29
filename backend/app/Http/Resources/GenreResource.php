@@ -12,16 +12,8 @@ class GenreResource extends JsonResource {
      * @return array
      */
     public function toArray($request) {
-        $default = parent::toArray($request);
-        $newFields = [
-            'id' => $this->id,
-            'name' => $this->name,
-            'is_active' => $this->is_active,
-            'categories' => CategoryResource::collection($this->categories),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'deleted_at' => $this->deleted_at
-        ];
-        return array_merge($default, $newFields);
+        return parent::toArray($request) + [
+                'categories' => CategoryResource::collection($this->whenLoaded('categories')),
+            ];
     }
 }

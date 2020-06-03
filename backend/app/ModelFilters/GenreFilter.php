@@ -8,7 +8,7 @@ class GenreFilter extends DefaultModelFilter {
     protected $sortable = ['name', 'created_at'];
 
     public function search($search) {
-        $this->where('name', 'LIKE', "%$search%")->with('categories');
+        $this->where('name', 'LIKE', "%$search%");
     }
 
     public function isActive($isActive) {

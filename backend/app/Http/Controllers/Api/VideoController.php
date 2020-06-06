@@ -15,8 +15,7 @@ class VideoController extends BasicCrudController {
         'title' => 'required|max:255',
         'description' => 'required',
         'year_launched' => 'required|date_format:Y',
-        'opened' => 'boolean',
-        'opened' => 'boolean',
+        'opened' => 'in:true,false',
         'duration' => 'required|integer',
         'categories_id' => 'required|array|exists:categories,id,deleted_at,NULL',
         'genres_id' => [

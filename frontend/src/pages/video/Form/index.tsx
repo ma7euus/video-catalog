@@ -148,9 +148,9 @@ const Form: React.FC = () => {
 
         (async () => {
             try {
-                const response = await videoHttp.get<GetResponse<Video>>(id);
-                setVideo(response.data.data);
-                reset(response.data.data);
+                const {data} = await videoHttp.get<GetResponse<Video>>(id);
+                setVideo(data.data);
+                reset(data.data);
             } catch (error) {
                 snackbar.enqueueSnackbar('Não foi possível carregar as informações.', {variant: 'error'});
             } finally {

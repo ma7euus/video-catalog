@@ -8,7 +8,7 @@ import {
     Typography,
 } from '@material-ui/core';
 import {grey} from '@material-ui/core/colors';
-import AsyncAutocomplete from '../../../components/AsyncAutocomplete';
+import AsyncAutocomplete, {AsyncAutocompleteComponent} from '../../../components/AsyncAutocomplete';
 import GridSelected from '../../../components/GridSelected';
 import GridSelectedItem from '../../../components/GridSelected/GridSelectedItem';
 import useHttpHandled from '../../../hooks/useHttpHandled';
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 }));
 
-interface CategoryFieldProps {
+interface CategoryFieldProps extends React.RefAttributes<CategoryFieldComponent> {
     categories: any[];
     setCategories: (categories) => void;
     genres: any[];
@@ -32,11 +32,20 @@ interface CategoryFieldProps {
     FormControlProps?: FormControlProps;
 }
 
-const CategoryField: React.FC<CategoryFieldProps> = (props) => {
+export interface CategoryFieldComponent {
+    clear: () => void;
+}
+
+const CategoryField = React.forwardRef<CategoryFieldComponent, CategoryFieldProps>((props, ref) => {
     const classes = useStyles();
     const {categories, setCategories, genres, error, disabled} = props;
     const autoCompleteHttp = useHttpHandled();
     const {addItem, removeItem} = useCollectionManager(categories, setCategories);
+
+    const autocompleteRef = React.useRef() as React.MutableRefObject<AsyncAutocompleteComponent>
+    React.useImperativeHandle(ref, () => ({
+        clear: () => autocompleteRef.current.clear()
+    }));
 
     function fetchOptions(searchText) {
         return autoCompleteHttp(
@@ -55,6 +64,7 @@ const CategoryField: React.FC<CategoryFieldProps> = (props) => {
     return (
         <>
             <AsyncAutocomplete
+                ref={autocompleteRef}
                 fetchOptions={fetchOptions}
                 AutocompleteProps={{
                     clearOnEscape: true,
@@ -98,6 +108,6 @@ const CategoryField: React.FC<CategoryFieldProps> = (props) => {
             </FormControl>
         </>
     );
-};
+});
 
 export default CategoryField;

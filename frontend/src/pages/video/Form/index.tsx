@@ -27,7 +27,7 @@ import CategoryField, {CategoryFieldComponent} from './CategoryField';
 import GenreField, {GenreFieldComponent} from './GenreField';
 import CastMemberField, {CastMemberFieldComponent} from './CastMemberField';
 import {InputFileComponent} from "../../../components/InputFile";
-import {zipObject} from 'lodash'
+import {omit, zipObject} from 'lodash';
 
 const useStyles = makeStyles((theme: Theme) => ({
     cardUpload: {
@@ -160,13 +160,17 @@ const Form: React.FC = () => {
     }, []); // eslint-disable-line
 
     function onSubmit(formData, event) {
-        setLoading(true);
+        const sendData = omit(formData, ['cast_members', 'genres', 'categories']);
+        sendData['cast_members_id'] = formData['cast_members'].map(cast_member => cast_member.id);
+        sendData['categories_id'] = formData['categories'].map(category => category.id);
+        sendData['genres_id'] = formData['genres'].map(genre => genre.id);
 
+        setLoading(true);
         (async () => {
             try {
                 const {data} = !video
-                    ? await videoHttp.create(formData)
-                    : await videoHttp.update(video.id, formData);
+                    ? await videoHttp.create(sendData)
+                    : await videoHttp.update(video.id, {...sendData, _method: 'PUT'}, {http: {usePost: true}});
                 snackbar.enqueueSnackbar('Vídeo salvo com sucesso.', {variant: 'success'});
 
                 id && resetForm(video);

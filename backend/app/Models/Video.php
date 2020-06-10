@@ -52,8 +52,6 @@ class Video extends Model {
      * @throws \Exception
      */
     public static function create(array $attributes = []) {
-
-        $attributes['opened'] = (int)(bool)$attributes['opened'];
         $files = self::extractFiles($attributes);
         try {
             \DB::beginTransaction();
@@ -73,7 +71,6 @@ class Video extends Model {
     }
 
     public function update(array $attributes = [], array $options = []) {
-        $attributes['opened'] = (int)(bool)$attributes['opened'];
         $files = self::extractFiles($attributes);
         try {
             \DB::beginTransaction();

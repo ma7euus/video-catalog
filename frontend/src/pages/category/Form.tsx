@@ -9,6 +9,7 @@ import {useSnackbar} from "notistack";
 import {Category, GetResponse} from "../../util/models";
 import SubmitActions from "../../components/SubmitActions";
 import DefaultForm from "../../components/DefaultForm";
+import useSnackbarFormError from "../../hooks/useSnackbarFormError";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -27,6 +28,7 @@ export const Form: React.FC = () => {
         reset,
         watch,
         triggerValidation,
+        formState
     } = useForm({
         validationSchema,
         defaultValues: {
@@ -34,6 +36,7 @@ export const Form: React.FC = () => {
             is_active: true
         }
     });
+    useSnackbarFormError(formState.submitCount, errors);
 
     const snackbar = useSnackbar();
     const history = useHistory();

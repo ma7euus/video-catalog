@@ -28,6 +28,7 @@ import GenreField, {GenreFieldComponent} from './GenreField';
 import CastMemberField, {CastMemberFieldComponent} from './CastMemberField';
 import {InputFileComponent} from "../../../components/InputFile";
 import {omit, zipObject} from 'lodash';
+import useSnackbarFormError from "../../../hooks/useSnackbarFormError";
 
 const useStyles = makeStyles((theme: Theme) => ({
     cardUpload: {
@@ -114,6 +115,7 @@ const Form: React.FC = () => {
         reset,
         watch,
         triggerValidation,
+        formState
     } = useForm<Video>({
         validationSchema,
         defaultValues: {
@@ -124,6 +126,7 @@ const Form: React.FC = () => {
             categories: [],
         },
     });
+    useSnackbarFormError(formState.submitCount, errors);
 
     const resetForm = React.useCallback((data) => {
         Object.keys(uploadsRef.current).forEach(

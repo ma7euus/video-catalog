@@ -3,6 +3,10 @@ import MUIDataTable, {MUIDataTableProps, MUIDataTableColumn, MUIDataTableOptions
 import {merge, omit, cloneDeep} from 'lodash';
 import {useTheme, Theme, MuiThemeProvider, useMediaQuery} from '@material-ui/core';
 import DebouncedTableSearch from './DebouncedTableSearch';
+import HttpResource from "../../util/http/http-resource";
+import useDeleteCollection from "../../hooks/useDeleteCollection";
+import DeleteDialog from "../DeleteDialog";
+import {useSnackbar} from "notistack";
 
 export interface TableColumn extends MUIDataTableColumn {
     width?: string;
@@ -17,9 +21,19 @@ export interface TableProps extends MUIDataTableProps, React.RefAttributes<MuiDa
     columns: TableColumn[];
     loading?: boolean;
     debouncedSearchTime?: number;
+    options?: TableOptionsProps;
 }
 
-const makeDefaultOptions = (debouncedSearchTime?): MUIDataTableOptions => ({
+export interface TableOptionsProps extends MUIDataTableOptions {
+    deleteOptions?: DeleteOptionsProps;
+}
+
+export interface DeleteOptionsProps {
+    resource?: HttpResource | any;
+    prepare?: (a: any[]) => void;
+}
+
+const makeDefaultOptions = (defaultProps?: TableProps | null): MUIDataTableOptions => ({
     print: false,
     download: false,
     textLabels: {
@@ -64,12 +78,23 @@ const makeDefaultOptions = (debouncedSearchTime?): MUIDataTableOptions => ({
             onSearch={handleSearch}
             onHide={hideSearch}
             options={options}
-            debounceTime={debouncedSearchTime}
+            debounceTime={defaultProps!.debouncedSearchTime}
         />
-    }
+    },
+    ...(defaultProps!.options!.deleteOptions && {
+        onRowsDelete: (rowsDeleted: any[]) => {
+            defaultProps!
+                .options!
+                .deleteOptions!
+                .prepare!(rowsDeleted as any)
+            return false
+        }
+    }),
 });
 
 const DefaultTable = React.forwardRef<MuiDataTableRefComponent, TableProps>((props, ref) => {
+    const useDelete = props.options?.deleteOptions ? useDeleteCollection() : null;
+    props.options!.deleteOptions!.prepare = useDelete!.setRowsToDelete as any;
 
     function extractMuiDataTableColumns(columns: TableColumn[]): MUIDataTableColumn[] {
         setColumnsWitdh(columns);
@@ -107,7 +132,7 @@ const DefaultTable = React.forwardRef<MuiDataTableRefComponent, TableProps>((pro
     const theme = cloneDeep<Theme>(useTheme());
     const isSmOrDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const defaultOptions = makeDefaultOptions(props.debouncedSearchTime);
+    const defaultOptions = makeDefaultOptions(props);
 
     const newProps = merge(
         {options: cloneDeep(defaultOptions)},
@@ -120,8 +145,50 @@ const DefaultTable = React.forwardRef<MuiDataTableRefComponent, TableProps>((pro
 
     const originalProps = getOriginalMuiDataTableProps();
 
+
+    const snackbar = useSnackbar();
+
+    function deleteRows(confirmed: boolean) {
+        if (!confirmed) {
+            useDelete!.setOpenDeleteDialog(false);
+            return;
+        }
+
+        const ids = useDelete!.rowsToDelete!
+            .data
+            .map(value => (props.data[value.index] as any).id)
+            .join(',');
+
+        props.options!.deleteOptions!.resource!
+            .deleteCollection({ids})
+            .then(response => {
+                snackbar.enqueueSnackbar('Registros excluidos com sucesso!', {
+                    variant: 'success'
+                });
+                /*if (useDelete!.rowsToDelete.data.length === filterState.pagination.per_page && filterState.pagination.page > 1) {
+                    const page = filterState.pagination.page - 2;
+                    filterManager.changePage(page);
+                } else {
+                    getData();
+                }*/
+            })
+            .catch(error => {
+                console.error(error)
+                snackbar.enqueueSnackbar('Não foi possível excluir os registros', {
+                    variant: 'error'
+                });
+            });
+    }
+
     return (
         <MuiThemeProvider theme={theme}>
+            {
+                props.options!.deleteOptions
+                    && (<DeleteDialog
+                    numRows={useDelete!.rowsToDelete.data.length}
+                    open={useDelete!.openDeleteDialog}
+                    handleClose={deleteRows}/>)
+            }
             <MUIDataTable {...originalProps}/>
         </MuiThemeProvider>
     )

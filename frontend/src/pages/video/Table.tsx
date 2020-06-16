@@ -289,6 +289,9 @@ const Table: React.FC = (props: TableProps) => {
       debouncedSearchTime={DEBOUNCE_SEARCH_TIME}
       ref={tableRef}
       options={{
+        deleteOptions: {
+          resource: videoHttp
+        },
         serverSide: true,
         serverSideFilterList,
         responsive: 'scrollMaxHeight',

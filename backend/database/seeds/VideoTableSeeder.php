@@ -37,7 +37,7 @@ class VideoTableSeeder extends Seeder {
 
         \Illuminate\Database\Eloquent\Model::reguard(); // mass assignment
 
-        factory(\App\Models\Video::class, 10)
+        factory(\App\Models\Video::class, 100)
             ->make()
             ->each(function (\App\Models\Video $video) use ($self) {
                 $self->fetchRelations();

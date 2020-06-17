@@ -1,10 +1,9 @@
 import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
-import {MuiThemeProvider} from "@material-ui/core";
 import {Link} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
 import categoryHttp from '../../util/http/category-http';
 import {formatDate} from '../../util/format';
-import DefaultTable, {makeActionStyles, MuiDataTableRefComponent, TableColumn} from '../../components/DefaultTable';
+import DefaultTable, {MuiDataTableRefComponent, TableColumn} from '../../components/DefaultTable';
 import {BadgeNo, BadgeYes} from '../../components/Badge';
 import {Category, ListResponse} from '../../util/models';
 import {FilterResetButton} from '../../components/DefaultTable/FilterResetButton';
@@ -78,9 +77,7 @@ const columnsDefinition: TableColumn[] = [
     },
 ];
 
-type TableProps = {};
-
-const Table: React.FC = (props: TableProps) => {
+const Table = React.forwardRef(() => {
     const snackbar = useSnackbar();
     const subscribed = useRef(true);
     const [categories, setCategories] = useState<Category[]>([]);
@@ -179,7 +176,6 @@ const Table: React.FC = (props: TableProps) => {
     }
 
     return (
-        <MuiThemeProvider theme={makeActionStyles(columnsDefinition.length - 1)}>
             <DefaultTable
                 title=""
                 columns={columns}
@@ -187,6 +183,14 @@ const Table: React.FC = (props: TableProps) => {
                 loading={loading}
                 debouncedSearchTime={DEBOUNCE_SEARCH_TIME}
                 ref={tableRef}
+                filterState={filterState}
+                filterManager={filterManager}
+                reloadFunction={{
+                    reloadData: () => getData()
+                }}
+                deleteOptions={{
+                    resource: categoryHttp,
+                }}
                 options={{
                     serverSide: true,
                     serverSideFilterList,
@@ -214,9 +218,7 @@ const Table: React.FC = (props: TableProps) => {
                         filterManager.changeColumnSort(changedColumn, direction),
                 }}
             />
-        </MuiThemeProvider>
     );
-};
+});
 
-// @ts-ignore
 export default Table;

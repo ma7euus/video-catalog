@@ -7,6 +7,8 @@ import HttpResource from "../../util/http/http-resource";
 import useDeleteCollection from "../../hooks/useDeleteCollection";
 import DeleteDialog from "../DeleteDialog";
 import {useSnackbar} from "notistack";
+import {State as FilterState} from '../../store/filter/types';
+import {FilterManager} from "../../hooks/useFilter";
 
 export interface TableColumn extends MUIDataTableColumn {
     width?: string;
@@ -21,11 +23,10 @@ export interface TableProps extends MUIDataTableProps, React.RefAttributes<MuiDa
     columns: TableColumn[];
     loading?: boolean;
     debouncedSearchTime?: number;
-    options?: TableOptionsProps;
-}
-
-export interface TableOptionsProps extends MUIDataTableOptions {
     deleteOptions?: DeleteOptionsProps;
+    filterState?: FilterState | null;
+    filterManager?: FilterManager | null;
+    reloadFunction?: { reloadData: () => Promise<void> };
 }
 
 export interface DeleteOptionsProps {
@@ -81,10 +82,9 @@ const makeDefaultOptions = (defaultProps?: TableProps | null): MUIDataTableOptio
             debounceTime={defaultProps!.debouncedSearchTime}
         />
     },
-    ...(defaultProps!.options!.deleteOptions && {
+    ...(defaultProps!.deleteOptions && {
         onRowsDelete: (rowsDeleted: any[]) => {
             defaultProps!
-                .options!
                 .deleteOptions!
                 .prepare!(rowsDeleted as any)
             return false
@@ -93,8 +93,8 @@ const makeDefaultOptions = (defaultProps?: TableProps | null): MUIDataTableOptio
 });
 
 const DefaultTable = React.forwardRef<MuiDataTableRefComponent, TableProps>((props, ref) => {
-    const useDelete = props.options?.deleteOptions ? useDeleteCollection() : null;
-    props.options!.deleteOptions!.prepare = useDelete!.setRowsToDelete as any;
+    const useDelete = props.deleteOptions ? useDeleteCollection() : null;
+    props.deleteOptions!.prepare = useDelete!.setRowsToDelete as any;
 
     function extractMuiDataTableColumns(columns: TableColumn[]): MUIDataTableColumn[] {
         setColumnsWitdh(columns);
@@ -159,18 +159,25 @@ const DefaultTable = React.forwardRef<MuiDataTableRefComponent, TableProps>((pro
             .map(value => (props.data[value.index] as any).id)
             .join(',');
 
-        props.options!.deleteOptions!.resource!
+        props.deleteOptions!.resource!
             .deleteCollection({ids})
             .then(response => {
                 snackbar.enqueueSnackbar('Registros excluidos com sucesso!', {
                     variant: 'success'
                 });
-                /*if (useDelete!.rowsToDelete.data.length === filterState.pagination.per_page && filterState.pagination.page > 1) {
-                    const page = filterState.pagination.page - 2;
-                    filterManager.changePage(page);
-                } else {
-                    getData();
-                }*/
+                let reloadData = props!.reloadFunction!.reloadData;
+                if (useDelete!.rowsToDelete.data.length === props!.filterState!.pagination.per_page
+                    && props!.filterState!.pagination.page > 1) {
+                    const page = props!.filterState!.pagination.page - 2;
+                    reloadData = function () {
+                        return new Promise(function (resolve, reject) {
+                            resolve(props!.filterManager!.changePage(page));
+                        });
+                    };
+                }
+                reloadData!().finally(
+                    () => useDelete!.setOpenDeleteDialog(false)
+                );
             })
             .catch(error => {
                 console.error(error)
@@ -181,10 +188,10 @@ const DefaultTable = React.forwardRef<MuiDataTableRefComponent, TableProps>((pro
     }
 
     return (
-        <MuiThemeProvider theme={theme}>
+        <MuiThemeProvider theme={makeActionStyles(originalProps.columns.length - 1)}>
             {
-                props.options!.deleteOptions
-                    && (<DeleteDialog
+                props.deleteOptions
+                && (<DeleteDialog
                     numRows={useDelete!.rowsToDelete.data.length}
                     open={useDelete!.openDeleteDialog}
                     handleClose={deleteRows}/>)

@@ -1,12 +1,11 @@
 import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
-import {MuiThemeProvider} from "@material-ui/core";
 import {Link} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
 import {invert} from 'lodash';
 import castMemberHttp from '../../util/http/cast-member-http';
 import {formatDate} from '../../util/format';
 import {CastMember, CastMemberTypeMap, ListResponse} from '../../util/models';
-import DefaultTable, {makeActionStyles, MuiDataTableRefComponent, TableColumn} from '../../components/DefaultTable';
+import DefaultTable, {MuiDataTableRefComponent, TableColumn} from '../../components/DefaultTable';
 import useFilter from '../../hooks/useFilter';
 import * as Yup from '../../util/vendor/yup';
 import categoryHttp from '../../util/http/category-http';
@@ -82,9 +81,7 @@ const columnsDefinition: TableColumn[] = [
     },
 ];
 
-type TableProps = {};
-
-const Table: React.FC = (props: TableProps) => {
+const Table = React.forwardRef(() => {
     const snackbar = useSnackbar();
     const subscribed = useRef(true);
     const [castMembers, setCastMembers] = useState<CastMember[]>([]);
@@ -181,7 +178,6 @@ const Table: React.FC = (props: TableProps) => {
     }
 
     return (
-        <MuiThemeProvider theme={makeActionStyles(columnsDefinition.length - 1)}>
             <DefaultTable
                 title=""
                 columns={columns}
@@ -189,6 +185,14 @@ const Table: React.FC = (props: TableProps) => {
                 loading={loading}
                 debouncedSearchTime={DEBOUNCE_SEARCH_TIME}
                 ref={tableRef}
+                filterState={filterState}
+                filterManager={filterManager}
+                reloadFunction={{
+                    reloadData: () => getData()
+                }}
+                deleteOptions={{
+                    resource: castMemberHttp,
+                }}
                 options={{
                     serverSide: true,
                     serverSideFilterList,
@@ -212,8 +216,7 @@ const Table: React.FC = (props: TableProps) => {
                         filterManager.changeColumnSort(changedColumn, direction),
                 }}
             />
-        </MuiThemeProvider>
     );
-};
+});
 
 export default Table;

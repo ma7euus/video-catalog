@@ -59,7 +59,7 @@ export default function useFilter(options: UseFilterOptions) {
   };
 }
 
-class FilterManager {
+export class FilterManager {
   state: FilterState = null as any;
 
   debouncedState: FilterState = null as any;

@@ -4,7 +4,7 @@ export const httpVideo = axios.create({
     baseURL: process.env.REACT_APP_MICRO_VIDEO_API_URL
 })
 
-const instances = [httpVideo]
+const instances = [httpVideo];
 
 export function addGlobalRequestInterceptor(
     onFulfilled?: (value: AxiosRequestConfig) => AxiosRequestConfig | Promise<AxiosRequestConfig>,

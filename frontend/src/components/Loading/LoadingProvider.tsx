@@ -34,7 +34,7 @@ export const LoadingProvider = (props) => {
                 decrementCountRequest();
             }
             return Promise.reject(error);
-        })
+        });
 
         return () => {
             isSubscribed = false;

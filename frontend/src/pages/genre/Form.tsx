@@ -2,7 +2,7 @@ import * as React from 'react';
 import {MenuItem, TextField} from "@material-ui/core";
 import {useForm} from "react-hook-form";
 import genreHttp from "../../util/http/genre-http";
-import {useEffect} from "react";
+import {useContext, useEffect} from "react";
 import categoryHttp from "../../util/http/category-http";
 import * as Yup from "../../util/vendor/yup";
 import {useParams, useHistory} from "react-router";
@@ -11,6 +11,7 @@ import {Category, Genre} from "../../util/models";
 import SubmitActions from "../../components/SubmitActions";
 import DefaultForm from "../../components/DefaultForm";
 import useSnackbarFormError from "../../hooks/useSnackbarFormError";
+import LoadingContext from "../../components/Loading/LoadigContext";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -48,7 +49,7 @@ export const Form = () => {
     const {id} = useParams();
     const [genre, setGenre] = React.useState<Genre | null>(null);
     const [categories, setCategories] = React.useState<Category[]>([]);
-    const [loading, setLoading] = React.useState<boolean>(false);
+    const loading = useContext(LoadingContext);
 
     const handleChange = event => setValue('categories_id', event.target.value);
 
@@ -60,7 +61,6 @@ export const Form = () => {
         let isSubscribed = true;
 
         (async () => {
-            setLoading(true);
             const promises = [categoryHttp.list({queryParams: {all: ''}})];
             if (id) {
                 promises.push(genreHttp.get(id));
@@ -84,8 +84,6 @@ export const Form = () => {
                 snackbar.enqueueSnackbar('Não foi possível carregar as categorias', {
                     variant: 'error'
                 });
-            } finally {
-                setLoading(false);
             }
         })();
 
@@ -95,8 +93,6 @@ export const Form = () => {
     }, [id, reset, snackbar]);
 
     async function onSubmit(formData, event) {
-        setLoading(true);
-
         try {
             const http = !genre ? genreHttp.create(formData) : genreHttp.update(genre.id, formData)
             const {data} = await http;
@@ -112,14 +108,12 @@ export const Form = () => {
                             ? history.replace(`/genres/${data.data.id}/edit`)
                             : history.push(`/genres/${data.data.id}/edit`)
                     ) : history.push('/genres');
-            })
+            });
         } catch (error) {
             console.error(error);
             snackbar.enqueueSnackbar('Não foi possível salvar o gênero', {
                 variant: 'error'
-            })
-        } finally {
-            setLoading(false);
+            });
         }
     }
 

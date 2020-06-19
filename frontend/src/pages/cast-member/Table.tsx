@@ -1,4 +1,4 @@
-import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
+import React, {MutableRefObject, useContext, useEffect, useRef, useState} from 'react';
 import {Link} from 'react-router-dom';
 import {useSnackbar} from 'notistack';
 import {invert} from 'lodash';
@@ -12,6 +12,7 @@ import categoryHttp from '../../util/http/category-http';
 import {FilterResetButton} from '../../components/DefaultTable/FilterResetButton';
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import LoadingContext from "../../components/Loading/LoadigContext";
 
 const DEBOUNCE_TIME = 300;
 const DEBOUNCE_SEARCH_TIME = 300;
@@ -85,7 +86,7 @@ const Table = React.forwardRef(() => {
     const snackbar = useSnackbar();
     const subscribed = useRef(true);
     const [castMembers, setCastMembers] = useState<CastMember[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+    const loading = useContext(LoadingContext);
     const tableRef = useRef() as MutableRefObject<MuiDataTableRefComponent>;
     const {
         columns,
@@ -149,8 +150,6 @@ const Table = React.forwardRef(() => {
     ]);
 
     async function getData() {
-        setLoading(true);
-
         try {
             const response = await castMemberHttp.list<ListResponse<CastMember>>({
                 queryParams: {
@@ -172,8 +171,6 @@ const Table = React.forwardRef(() => {
         } catch (error) {
             if (categoryHttp.isCancelledRequest(error)) return;
             snackbar.enqueueSnackbar('Não foi possível carregar as informações.', {variant: 'error'});
-        } finally {
-            setLoading(false);
         }
     }
 

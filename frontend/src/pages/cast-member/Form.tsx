@@ -6,7 +6,7 @@ import {
 } from "@material-ui/core";
 import {useForm} from "react-hook-form";
 import castMemberHttp from "../../util/http/cast-member-http";
-import {useEffect} from "react";
+import {useContext, useEffect} from "react";
 import * as Yup from "../../util/vendor/yup";
 import {useParams, useHistory} from "react-router";
 import {useSnackbar} from "notistack";
@@ -14,6 +14,7 @@ import {CastMember} from "../../util/models";
 import SubmitActions from "../../components/SubmitActions";
 import DefaultForm from "../../components/DefaultForm";
 import useSnackbarFormError from "../../hooks/useSnackbarFormError";
+import LoadingContext from "../../components/Loading/LoadigContext";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -46,7 +47,7 @@ export const Form = () => {
     const history = useHistory();
     const {id} = useParams();
     const [castMember, setCastMember] = React.useState<CastMember | null>(null);
-    const [loading, setLoading] = React.useState<boolean>(false);
+    const loading = useContext(LoadingContext);
     const handleChange = event => setValue('type', parseInt(event.target.value));
 
     useEffect(() => {
@@ -61,8 +62,6 @@ export const Form = () => {
         }
 
         (async () => {
-            setLoading(true);
-
             try {
                 const {data} = await castMemberHttp.get(id);
                 if (isSubscribed) {
@@ -74,8 +73,6 @@ export const Form = () => {
                 snackbar.enqueueSnackbar('Não foi possível carregar as informações.', {
                     variant: 'error'
                 })
-            } finally {
-                setLoading(false);
             }
         })();
 
@@ -85,14 +82,13 @@ export const Form = () => {
     }, [id, reset, snackbar]);
 
     async function onSubmit(formData, event) {
-        setLoading(true);
         try {
             const http = !castMember ? castMemberHttp.create(formData) : castMemberHttp.update(castMember.id, formData);
             const {data} = await http;
 
             snackbar.enqueueSnackbar('Membro de elenco salvo com sucesso!', {
                 variant: 'success'
-            })
+            });
 
             setTimeout(() => {
                 event
@@ -101,15 +97,13 @@ export const Form = () => {
                             ? history.replace(`/cast-members/${data.data.id}/edit`)
                             : history.push(`/cast-members/${data.data.id}/edit`)
                     ) : history.push('/cast-members');
-            })
+            });
 
         } catch (error) {
             console.error(error)
             snackbar.enqueueSnackbar('Não foi possível salvar o membro do elenco', {
                 variant: 'error'
-            })
-        } finally {
-            setLoading(false);
+            });
         }
     }
 

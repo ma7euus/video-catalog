@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useParams} from 'react-router';
 import {
     Card,
@@ -29,6 +29,7 @@ import CastMemberField, {CastMemberFieldComponent} from './CastMemberField';
 import {InputFileComponent} from "../../../components/InputFile";
 import {omit, zipObject} from 'lodash';
 import useSnackbarFormError from "../../../hooks/useSnackbarFormError";
+import LoadingContext from "../../../components/Loading/LoadigContext";
 
 const useStyles = makeStyles((theme: Theme) => ({
     cardUpload: {
@@ -96,7 +97,7 @@ const Form: React.FC = () => {
     const history = useHistory();
     const snackbar = useSnackbar();
     const [video, setVideo] = useState<Video | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+    const loading = useContext(LoadingContext);
     const theme = useTheme();
     const isGreaterMd = useMediaQuery(theme.breakpoints.up('md'));
     const uploadsRef = React.useRef(
@@ -147,8 +148,6 @@ const Form: React.FC = () => {
     useEffect(() => {
         if (!id) return;
 
-        setLoading(true);
-
         (async () => {
             try {
                 const {data} = await videoHttp.get<GetResponse<Video>>(id);
@@ -156,8 +155,6 @@ const Form: React.FC = () => {
                 reset(data.data);
             } catch (error) {
                 snackbar.enqueueSnackbar('Não foi possível carregar as informações.', {variant: 'error'});
-            } finally {
-                setLoading(false);
             }
         })();
     }, []); // eslint-disable-line
@@ -168,7 +165,6 @@ const Form: React.FC = () => {
         sendData['categories_id'] = formData['categories'].map(category => category.id);
         sendData['genres_id'] = formData['genres'].map(genre => genre.id);
 
-        setLoading(true);
         (async () => {
             try {
                 const {data} = !video
@@ -187,8 +183,6 @@ const Form: React.FC = () => {
             } catch (error) {
                 console.log(error);
                 snackbar.enqueueSnackbar('Não foi possível salvar o vídeo.', {variant: 'error'});
-            } finally {
-                setLoading(false);
             }
         })();
     }

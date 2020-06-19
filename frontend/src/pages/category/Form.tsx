@@ -3,13 +3,14 @@ import {Checkbox, FormControlLabel, TextField} from "@material-ui/core";
 import {useForm} from "react-hook-form";
 import categoryHttp from "../../util/http/category-http";
 import * as Yup from '../../util/vendor/yup';
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {useParams, useHistory} from "react-router";
 import {useSnackbar} from "notistack";
 import {Category, GetResponse} from "../../util/models";
 import SubmitActions from "../../components/SubmitActions";
 import DefaultForm from "../../components/DefaultForm";
 import useSnackbarFormError from "../../hooks/useSnackbarFormError";
+import LoadingContext from "../../components/Loading/LoadigContext";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -42,10 +43,10 @@ export const Form: React.FC = () => {
     const history = useHistory();
     const {id} = useParams();
     const [category, setCategory] = useState<Category | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+    const loading = useContext(LoadingContext);
 
     useEffect(() => {
-        register({name: "is_active"})
+        register({name: "is_active"});
     }, [register]);
 
     useEffect(() => {
@@ -56,7 +57,6 @@ export const Form: React.FC = () => {
         }
 
         (async () => {
-            setLoading(true);
             try {
                 const {data} = await categoryHttp.get<GetResponse<Category>>(id);
                 if (isSubscribed) {
@@ -67,9 +67,7 @@ export const Form: React.FC = () => {
                 console.error(error);
                 snackbar.enqueueSnackbar('Não foi possível carregar a categoria', {
                     variant: 'error'
-                })
-            } finally {
-                setLoading(false);
+                });
             }
         })();
         return () => {
@@ -78,13 +76,9 @@ export const Form: React.FC = () => {
     }, [id, reset, snackbar]);
 
     async function onSubmit(formData, event) {
-        setLoading(true);
-
         try {
             const http = !category ? categoryHttp.create(formData) : categoryHttp.update(category.id, formData);
             const {data} = await http;
-
-
             snackbar.enqueueSnackbar(
                 "Categoria salva com sucesso!",
                 {variant: 'success'}
@@ -103,8 +97,6 @@ export const Form: React.FC = () => {
                 "Não foi possível salvar a categoria",
                 {variant: 'error'}
             );
-        } finally {
-            setLoading(false);
         }
     }
 

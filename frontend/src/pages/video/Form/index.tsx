@@ -30,6 +30,10 @@ import {InputFileComponent} from "../../../components/InputFile";
 import {omit, zipObject} from 'lodash';
 import useSnackbarFormError from "../../../hooks/useSnackbarFormError";
 import LoadingContext from "../../../components/Loading/LoadigContext";
+import SnackbarUpload from '../../../components/SnackbarUpload'
+import {useSelector, useDispatch} from 'react-redux'
+import {Upload, UploadModule} from '../../../store/upload/types'
+import {Creators} from '../../../store/upload'
 
 const useStyles = makeStyles((theme: Theme) => ({
     cardUpload: {
@@ -127,6 +131,49 @@ const Form: React.FC = () => {
             categories: [],
         },
     });
+    const uploads = useSelector<UploadModule, Upload[]>((state) => state.upload.uploads);
+    const dispatch = useDispatch();
+
+    console.log(uploads);
+
+    React.useMemo(() => {
+        setTimeout(() => {
+            const obj: any = {
+                video: {
+                    id: '4cee7870-12eb-43f0-bd44-1d1a053a4b0e',
+                    title: 'teste'
+                },
+                files: [
+                    {
+                        file: new File([""], "teste.mp4"),
+                        fileField: 'trailer_file'
+                    },
+                    {
+                        file: new File([""], "teste.mp4"),
+                        fileField: 'video_file'
+                    }
+                ]
+            };
+            dispatch(Creators.addUpload(obj));
+            const progress1 = {
+                fileField: 'trailer_file',
+                progress: 10,
+                video: {id: '1'}
+            } as any;
+
+            dispatch(Creators.updateProgress(progress1));
+
+            const progress2 = {
+                fileField: 'video_file',
+                progress: 20,
+                video: {id: '1'}
+            } as any;
+            dispatch(Creators.updateProgress(progress2));
+        }, 1000);
+        // eslint-disable-next-line
+    }, [true, dispatch]);
+
+
     useSnackbarFormError(formState.submitCount, errors);
 
     const resetForm = React.useCallback((data) => {
@@ -146,6 +193,18 @@ const Form: React.FC = () => {
     }, [register]);
 
     useEffect(() => {
+        snackbar.enqueueSnackbar('', {
+            key: 'snackbar-upload',
+            persist: true,
+            anchorOrigin: {
+                vertical: 'bottom',
+                horizontal: 'right'
+            },
+            content: (key, message) => {
+                const id = key as any
+                return <SnackbarUpload id={id}/>
+            }
+        });
         if (!id) return;
 
         (async () => {

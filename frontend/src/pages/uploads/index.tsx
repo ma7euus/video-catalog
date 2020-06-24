@@ -71,7 +71,8 @@ const Uploads = () => {
             } as any;
             dispatch(Creators.updateProgress(progress2));
         }, 1000);
-    }, [true]);
+        // eslint-disable-next-line
+    }, [true, dispatch]);
 
     return (
         <Page title="Uploads">

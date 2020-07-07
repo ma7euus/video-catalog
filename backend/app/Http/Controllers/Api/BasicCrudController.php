@@ -104,7 +104,11 @@ abstract class BasicCrudController extends Controller {
     public function update(Request $request, $id) {
         $obj = $this->findOrFail($id);
         $this->request = $request;
-        $validationData = $this->validate($request, $this->rulesUpdate());
+        $validationData = $this->validate(
+            $request,
+            $this->request->isMethod('PUT')
+                ? $this->rulesUpdate() : $this->rulesPatch()
+        );
         $obj = $this->handleUpdate($request, $obj, $validationData);
         return $this->handleResponse($obj);
     }
@@ -155,5 +159,18 @@ abstract class BasicCrudController extends Controller {
             ]
         );
         return $validator->validate();
+    }
+
+    protected function rulesPatch() {
+        return array_map(function ($rules) {
+            if (is_array($rules)) {
+                if (in_array('required', $rules)) {
+                    array_unshift($rules, 'sometimes');
+                }
+            } else {
+                return str_replace('required', 'sometimes|required', $rules);
+            }
+            return $rules;
+        }, $this->rulesUpdate());
     }
 }

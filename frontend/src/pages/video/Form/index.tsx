@@ -32,7 +32,7 @@ import useSnackbarFormError from "../../../hooks/useSnackbarFormError";
 import LoadingContext from "../../../components/Loading/LoadigContext";
 import SnackbarUpload from '../../../components/SnackbarUpload'
 import {useSelector, useDispatch} from 'react-redux'
-import {Upload, UploadModule} from '../../../store/upload/types'
+import {FileInfo, Upload, UploadModule} from '../../../store/upload/types'
 import {Creators} from '../../../store/upload'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -121,7 +121,9 @@ const Form: React.FC = () => {
         watch,
         triggerValidation,
         formState
-    } = useForm<Video>({
+    } = useForm<Omit<Video,
+        'id'|'thumb_file_url'|'banner_file_url'|
+        'trailer_file_url'|'video_file_url'>>({
         validationSchema,
         defaultValues: {
             rating: '',
@@ -131,49 +133,7 @@ const Form: React.FC = () => {
             categories: [],
         },
     });
-    const uploads = useSelector<UploadModule, Upload[]>((state) => state.upload.uploads);
     const dispatch = useDispatch();
-
-    console.log(uploads);
-
-    React.useMemo(() => {
-        setTimeout(() => {
-            const obj: any = {
-                video: {
-                    id: '4cee7870-12eb-43f0-bd44-1d1a053a4b0e',
-                    title: 'teste'
-                },
-                files: [
-                    {
-                        file: new File([""], "teste.mp4"),
-                        fileField: 'trailer_file'
-                    },
-                    {
-                        file: new File([""], "teste.mp4"),
-                        fileField: 'video_file'
-                    }
-                ]
-            };
-            dispatch(Creators.addUpload(obj));
-            const progress1 = {
-                fileField: 'trailer_file',
-                progress: 10,
-                video: {id: '1'}
-            } as any;
-
-            dispatch(Creators.updateProgress(progress1));
-
-            const progress2 = {
-                fileField: 'video_file',
-                progress: 20,
-                video: {id: '1'}
-            } as any;
-            dispatch(Creators.updateProgress(progress2));
-        }, 1000);
-        // eslint-disable-next-line
-    }, [true, dispatch]);
-
-
     useSnackbarFormError(formState.submitCount, errors);
 
     const resetForm = React.useCallback((data) => {
@@ -219,7 +179,7 @@ const Form: React.FC = () => {
     }, []); // eslint-disable-line
 
     function onSubmit(formData, event) {
-        const sendData = omit(formData, ['cast_members', 'genres', 'categories']);
+        const sendData = omit(formData, [...fileFields, 'cast_members', 'genres', 'categories']);
         sendData['cast_members_id'] = formData['cast_members'].map(cast_member => cast_member.id);
         sendData['categories_id'] = formData['categories'].map(category => category.id);
         sendData['genres_id'] = formData['genres'].map(genre => genre.id);
@@ -231,6 +191,7 @@ const Form: React.FC = () => {
                     : await videoHttp.update(video.id, {...sendData, _method: 'PUT'}, {http: {usePost: true}});
                 snackbar.enqueueSnackbar('Vídeo salvo com sucesso.', {variant: 'success'});
 
+                uploadFiles(data.data);
                 id && resetForm(video);
                 setTimeout(() => {
                     event
@@ -244,6 +205,29 @@ const Form: React.FC = () => {
                 snackbar.enqueueSnackbar('Não foi possível salvar o vídeo.', {variant: 'error'});
             }
         })();
+    }
+
+    function uploadFiles(video) {
+        const files: FileInfo[] = fileFields
+            .filter(fileField => getValues()[fileField])
+            .map(fileField => ({fileField, file: getValues()[fileField] as any}));
+        console.log(files);
+        if (!files.length) {
+            return;
+        }
+        dispatch(Creators.addUpload({video, files}));
+        snackbar.enqueueSnackbar('', {
+            key: 'snackbar-upload',
+            persist: true,
+            anchorOrigin: {
+                vertical: 'bottom',
+                horizontal: 'right'
+            },
+            content: (key, message) => {
+                const id = key as any;
+                return <SnackbarUpload id={id}/>;
+            }
+        });
     }
 
     return (

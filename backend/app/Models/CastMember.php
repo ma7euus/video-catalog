@@ -27,7 +27,7 @@ class CastMember extends Model {
     protected $casts = ['id' => 'string', 'type' => 'integer'];
 
     public $incrementing = false;
-
+    protected $keyType = 'string';
 
     public function modelFilter() {
         return $this->provideFilter(CastMemberFilter::class);

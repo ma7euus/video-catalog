@@ -30,7 +30,7 @@ export const Form: React.FC = () => {
         watch,
         triggerValidation,
         formState
-    } = useForm({
+    } = useForm<{name, is_active}>({
         validationSchema,
         defaultValues: {
             name: '',

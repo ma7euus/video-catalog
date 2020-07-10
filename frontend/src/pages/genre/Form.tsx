@@ -35,7 +35,7 @@ export const Form = () => {
         watch,
         triggerValidation,
         formState
-    } = useForm({
+    } = useForm<{name, categories_id}>({
         validationSchema,
         defaultValues: {
             name: '',

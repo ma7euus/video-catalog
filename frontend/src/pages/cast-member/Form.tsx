@@ -38,7 +38,7 @@ export const Form = () => {
         watch,
         triggerValidation,
         formState
-    } = useForm({
+    } = useForm<{name, type}>({
         validationSchema
     });
     useSnackbarFormError(formState.submitCount, errors);

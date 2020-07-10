@@ -63,6 +63,5 @@ export const Menu = () => {
                 }
             </MuiMenu>
         </React.Fragment>
-
     );
 };

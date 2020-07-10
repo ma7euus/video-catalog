@@ -19,6 +19,7 @@ class Category extends Model {
     protected $casts = ['id' => 'string', 'is_active' => 'boolean'];
 
     public $incrementing = false;
+    protected $keyType = 'string';
 
     /**
      * @return mixed

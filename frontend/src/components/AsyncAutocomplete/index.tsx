@@ -72,7 +72,7 @@ const AsyncAutocomplete = React.forwardRef<AsyncAutocompleteComponent, AsyncAuto
         if (!open && !freeSolo) {
             setOptions([]);
         }
-    }, [open]); // eslint-disable-line
+    }, [open, freeSolo]); // eslint-disable-line
 
     useEffect(() => {
         if (!open || (searchText === '' && freeSolo)) return;
@@ -96,7 +96,7 @@ const AsyncAutocomplete = React.forwardRef<AsyncAutocompleteComponent, AsyncAuto
         return () => {
             isSubscribed = false;
         };
-    }, [freeSolo ? debouncedSearchText : open]); // eslint-disable-line
+    }, [freeSolo, debouncedSearchText, open]) // eslint-disable-line
 
     React.useImperativeHandle(ref, () => ({
         clear: () => {

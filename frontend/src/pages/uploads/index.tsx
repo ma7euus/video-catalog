@@ -15,10 +15,9 @@ import {
 import UploadItem from "./UploadItem";
 import {Page} from '../../components/Page';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {UploadModule, Upload} from '../../store/upload/types';
 import {VideoFileFieldsMap} from '../../util/models';
-import {Creators} from '../../store/upload';
 
 const useStyles = makeStyles((theme: Theme) => {
     return ({

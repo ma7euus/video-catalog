@@ -5,7 +5,6 @@ import {
     CardContent,
     Checkbox,
     FormControlLabel,
-    FormHelperText,
     Grid,
     makeStyles,
     TextField,
@@ -31,8 +30,8 @@ import {omit, zipObject} from 'lodash';
 import useSnackbarFormError from "../../../hooks/useSnackbarFormError";
 import LoadingContext from "../../../components/Loading/LoadigContext";
 import SnackbarUpload from '../../../components/SnackbarUpload'
-import {useSelector, useDispatch} from 'react-redux'
-import {FileInfo, Upload, UploadModule} from '../../../store/upload/types'
+import {useDispatch} from 'react-redux'
+import {FileInfo} from '../../../store/upload/types'
 import {Creators} from '../../../store/upload'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -122,8 +121,8 @@ const Form: React.FC = () => {
         triggerValidation,
         formState
     } = useForm<Omit<Video,
-        'id'|'thumb_file_url'|'banner_file_url'|
-        'trailer_file_url'|'video_file_url'>>({
+        'id' | 'thumb_file_url' | 'banner_file_url' |
+        'trailer_file_url' | 'video_file_url'>>({
         validationSchema,
         defaultValues: {
             rating: '',
@@ -153,18 +152,6 @@ const Form: React.FC = () => {
     }, [register]);
 
     useEffect(() => {
-        snackbar.enqueueSnackbar('', {
-            key: 'snackbar-upload',
-            persist: true,
-            anchorOrigin: {
-                vertical: 'bottom',
-                horizontal: 'right'
-            },
-            content: (key, message) => {
-                const id = key as any
-                return <SnackbarUpload id={id}/>
-            }
-        });
         if (!id) return;
 
         (async () => {
@@ -209,9 +196,8 @@ const Form: React.FC = () => {
 
     function uploadFiles(video) {
         const files: FileInfo[] = fileFields
-            .filter(fileField => getValues()[fileField])
+            .filter(fileField => getValues()[fileField] instanceof File)
             .map(fileField => ({fileField, file: getValues()[fileField] as any}));
-        console.log(files);
         if (!files.length) {
             return;
         }
@@ -319,10 +305,6 @@ const Form: React.FC = () => {
                                 error={errors.categories}
                                 disabled={loading}
                             />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormHelperText>Escolha os gêneros do vídeo.</FormHelperText>
-                            <FormHelperText>Escolha pelo menos uma categoria de cada gênero.</FormHelperText>
                         </Grid>
                     </Grid>
                 </Grid>

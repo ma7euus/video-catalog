@@ -29,11 +29,18 @@ const CastMemberField = React.forwardRef<CastMemberFieldComponent, CastMemberFie
         clear: () => autocompleteRef.current.clear()
     }));
 
-    function fetchOptions(searchText) {
+    const fetchOptions = React.useCallback((searchText) => {
         return autoCompleteHttp(
-            castMemberHttp.list({queryParams: {search: searchText, all: ''}}),
+            castMemberHttp.list({
+                queryParams: {
+                    search: searchText,
+                    all: ''
+                }
+            }),
         ).then((response) => response.data.data);
-    }
+        // eslint-disable-next-line
+        }, [autoCompleteHttp]
+    );
 
     return (
         <>

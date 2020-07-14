@@ -197,7 +197,7 @@ const Form: React.FC = () => {
     function uploadFiles(video) {
         const files: FileInfo[] = fileFields
             .filter(fileField => getValues()[fileField] instanceof File)
-            .map(fileField => ({fileField, file: getValues()[fileField] as any}));
+            .map(fileField => ({fileField, file: getValues()[fileField] as File}));
         if (!files.length) {
             return;
         }

@@ -16,10 +16,11 @@ export interface AsyncAutocompleteComponent {
 }
 
 const AsyncAutocomplete = React.forwardRef<AsyncAutocompleteComponent, AsyncAutocompleteProps>((props, ref) => {
-    const {freeSolo = false, onOpen, onClose, onInputChange} = props.AutocompleteProps as any;
+    const {AutocompleteProps, TextFieldProps, debounceTime, fetchOptions} = props;
+    const {freeSolo = false, onOpen, onClose, onInputChange} = AutocompleteProps as any;
     const [open, setOpen] = useState(false);
     const [searchText, setSearchText] = useState('');
-    const [debouncedSearchText] = useDebounce(searchText, props.debounceTime || 300);
+    const [debouncedSearchText] = useDebounce(searchText, debounceTime || 300);
     const [loading, setLoading] = useState(false);
     const [options, setOptions] = useState([]);
 
@@ -28,13 +29,13 @@ const AsyncAutocomplete = React.forwardRef<AsyncAutocompleteComponent, AsyncAuto
         variant: 'outlined',
         fullWidth: true,
         InputLabelProps: {shrink: true},
-        ...(props.TextFieldProps && {...props.TextFieldProps}),
+        ...(TextFieldProps && {...TextFieldProps}),
     };
 
     const autoCompleteProps: AutocompleteProps<any, any, any, any> = {
         loadingText: 'Carregando...',
         noOptionsText: 'Nenhum item encontrado',
-        ...(props.AutocompleteProps && {...props.AutocompleteProps}),
+        ...(AutocompleteProps && {...AutocompleteProps}),
         open,
         options,
         loading,
@@ -72,7 +73,7 @@ const AsyncAutocomplete = React.forwardRef<AsyncAutocompleteComponent, AsyncAuto
         if (!open && !freeSolo) {
             setOptions([]);
         }
-    }, [open, freeSolo]); // eslint-disable-line
+    }, [open, freeSolo]);
 
     useEffect(() => {
         if (!open || (searchText === '' && freeSolo)) return;
@@ -83,7 +84,7 @@ const AsyncAutocomplete = React.forwardRef<AsyncAutocompleteComponent, AsyncAuto
             setLoading(true);
 
             try {
-                const data = await props.fetchOptions(debouncedSearchText);
+                const data = await fetchOptions(debouncedSearchText);
 
                 if (isSubscribed) {
                     setOptions(data);
@@ -96,7 +97,7 @@ const AsyncAutocomplete = React.forwardRef<AsyncAutocompleteComponent, AsyncAuto
         return () => {
             isSubscribed = false;
         };
-    }, [freeSolo, debouncedSearchText, open]) // eslint-disable-line
+    }, [freeSolo, debouncedSearchText, open, fetchOptions])
 
     React.useImperativeHandle(ref, () => ({
         clear: () => {

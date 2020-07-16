@@ -39,8 +39,7 @@ export const LoadingProvider = (props) => {
             removeGlobalRequestInterceptor(requestIds);
             removeGlobalResponseInterceptor(responseIds);
         }
-        // eslint-disable-next-line
-    }, [true]);
+    }, []);
 
     useEffect(() => {
         if (!countRequest) {

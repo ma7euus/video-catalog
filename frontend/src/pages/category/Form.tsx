@@ -39,7 +39,7 @@ export const Form: React.FC = () => {
     });
     useSnackbarFormError(formState.submitCount, errors);
 
-    const snackbar = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
     const {id} = useParams();
     const [category, setCategory] = useState<Category | null>(null);
@@ -65,7 +65,7 @@ export const Form: React.FC = () => {
                 }
             } catch (error) {
                 console.error(error);
-                snackbar.enqueueSnackbar('Não foi possível carregar a categoria', {
+                enqueueSnackbar('Não foi possível carregar a categoria', {
                     variant: 'error'
                 });
             }
@@ -73,13 +73,13 @@ export const Form: React.FC = () => {
         return () => {
             isSubscribed = false;
         }
-    }, [id, reset, snackbar]);
+    }, [id, reset, enqueueSnackbar]);
 
     async function onSubmit(formData, event) {
         try {
             const http = !category ? categoryHttp.create(formData) : categoryHttp.update(category.id, formData);
             const {data} = await http;
-            snackbar.enqueueSnackbar(
+            enqueueSnackbar(
                 "Categoria salva com sucesso!",
                 {variant: 'success'}
             );
@@ -93,7 +93,7 @@ export const Form: React.FC = () => {
             });
         } catch (error) {
             console.log(error);
-            snackbar.enqueueSnackbar(
+            enqueueSnackbar(
                 "Não foi possível salvar a categoria",
                 {variant: 'error'}
             );

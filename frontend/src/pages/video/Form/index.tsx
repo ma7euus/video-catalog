@@ -98,7 +98,7 @@ const Form: React.FC = () => {
     const classes = useStyles();
     const {id} = useParams();
     const history = useHistory();
-    const snackbar = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
     const [video, setVideo] = useState<Video | null>(null);
     const loading = useContext(LoadingContext);
     const theme = useTheme();
@@ -160,10 +160,10 @@ const Form: React.FC = () => {
                 setVideo(data.data);
                 reset(data.data);
             } catch (error) {
-                snackbar.enqueueSnackbar('Não foi possível carregar as informações.', {variant: 'error'});
+                enqueueSnackbar('Não foi possível carregar as informações.', {variant: 'error'});
             }
         })();
-    }, []); // eslint-disable-line
+    }, [id, reset, enqueueSnackbar]);
 
     function onSubmit(formData, event) {
         const sendData = omit(formData, [...fileFields, 'cast_members', 'genres', 'categories']);
@@ -176,7 +176,7 @@ const Form: React.FC = () => {
                 const {data} = !video
                     ? await videoHttp.create(sendData)
                     : await videoHttp.update(video.id, {...sendData, _method: 'PUT'}, {http: {usePost: true}});
-                snackbar.enqueueSnackbar('Vídeo salvo com sucesso.', {variant: 'success'});
+                enqueueSnackbar('Vídeo salvo com sucesso.', {variant: 'success'});
 
                 uploadFiles(data.data);
                 id && resetForm(video);
@@ -189,7 +189,7 @@ const Form: React.FC = () => {
                 });
             } catch (error) {
                 console.log(error);
-                snackbar.enqueueSnackbar('Não foi possível salvar o vídeo.', {variant: 'error'});
+                enqueueSnackbar('Não foi possível salvar o vídeo.', {variant: 'error'});
             }
         })();
     }
@@ -202,7 +202,7 @@ const Form: React.FC = () => {
             return;
         }
         dispatch(Creators.addUpload({video, files}));
-        snackbar.enqueueSnackbar('', {
+        enqueueSnackbar('', {
             key: 'snackbar-upload',
             persist: true,
             anchorOrigin: {

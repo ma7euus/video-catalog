@@ -7,7 +7,8 @@ RUN apk add --no-cache openssl \
     npm \
     freetype-dev \
     libjpeg-turbo-dev \
-    libpng-dev
+    libpng-dev \
+    shadow
 
 RUN touch /root/.bashrc | echo "PS1='\w\$ '" >> /root/.bashrc
 
@@ -27,6 +28,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 RUN ln -s /var/www/backend/public html
 RUN chown -R www-data:www-data /var/www
+
+RUN usermod -u 1000 www-data
+USER www-data
 
 EXPOSE 9000
 

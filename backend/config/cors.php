@@ -1,6 +1,6 @@
 <?php
 
-$origins = env('CORS_ORIGINS', []);
+$origins = env('CORS_ORIGINS', 'http://localhost:3000');
 return [
 
     /*

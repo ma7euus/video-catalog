@@ -12,21 +12,33 @@ class SyncModelObserver {
         $modelName = $this->getModelName($model);
         $data = $model->toArray();
         $action = __FUNCTION__;
-        $this->publish("model.{$modelName}.{$action}", $data);
+        try {
+            $this->publish("model.{$modelName}.{$action}", $data);
+        } catch (\Exception $e) {
+            $this->reportException([$modelName, $model, $action, $e]);
+        }
     }
 
     public function updated(Model $model) {
         $modelName = $this->getModelName($model);
         $data = $model->toArray();
         $action = __FUNCTION__;
-        $this->publish("model.{$modelName}.{$action}", $data);
+        try {
+            $this->publish("model.{$modelName}.{$action}", $data);
+        } catch (\Exception $e) {
+            $this->reportException([$modelName, $model, $action, $e]);
+        }
     }
 
     public function deleted(Model $model) {
         $modelName = $this->getModelName($model);
         $data = ['id' => $model->id];
         $action = __FUNCTION__;
-        $this->publish("model.{$modelName}.{$action}", $data);
+        try {
+            $this->publish("model.{$modelName}.{$action}", $data);
+        } catch (\Exception $e) {
+            $this->reportException([$modelName, $model, $action, $e]);
+        }
     }
 
     public function restored(Model $model) {
@@ -51,5 +63,11 @@ class SyncModelObserver {
             'exchange_type' => 'topic',
             'exchange' => 'amq.topic'
         ]);
+    }
+
+    protected function reportException($params) {
+        list($modelName, $model, $action, $e) = $params;
+        $myException = new \Exception("The model {$modelName} with {$model->id} not synced on {$action}", 0, $e);
+        report($myException);
     }
 }

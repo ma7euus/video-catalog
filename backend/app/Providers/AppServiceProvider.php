@@ -26,8 +26,8 @@ class AppServiceProvider extends ServiceProvider {
      * @return void
      */
     public function boot() {
-        Category::observe(CategoryObserver::class);
-        Genre::observe(GenreObserver::class);
-        CastMember::observe(CastMemberObserver::class);
+        Category::observe(SyncModelObserver::class);
+        Genre::observe(SyncModelObserver::class);
+        CastMember::observe(SyncModelObserver::class);
     }
 }

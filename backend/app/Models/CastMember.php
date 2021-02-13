@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\ModelFilters\CastMemberFilter;
+use App\Models\Traits\SerializeDateToIso8601;
 use App\Models\Traits\Uuid;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +19,7 @@ class CastMember extends Model {
         CastMember::TYPE_ACTOR
     ];
 
-    use SoftDeletes, Uuid, Filterable;
+    use SoftDeletes, Uuid, Filterable, SerializeDateToIso8601;
 
     protected $fillable = ['name', 'type'];
 

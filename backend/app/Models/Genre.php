@@ -5,13 +5,14 @@ namespace App\Models;
 use App\ModelFilters\GenreFilter;
 use App\Models\Traits\SerializeDateToIso8601;
 use App\Models\Traits\Uuid;
+use Chelout\RelationshipEvents\Concerns\HasBelongsToManyEvents;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Genre extends Model {
 
-    use SoftDeletes, Uuid, Filterable, SerializeDateToIso8601;
+    use SoftDeletes, Uuid, Filterable, SerializeDateToIso8601, HasBelongsToManyEvents;
 
     protected $fillable = ['name', 'is_active'];
 
@@ -22,11 +23,19 @@ class Genre extends Model {
     public $incrementing = false;
     protected $keyType = 'string';
 
+    protected $observables = [
+        'belongsToManyAttached'
+    ];
+
     public function categories() {
         return $this->belongsToMany(Category::class)->withTrashed();
     }
 
     public function modelFilter() {
         return $this->provideFilter(GenreFilter::class);
+    }
+
+    public function resolveChildRouteBinding($childType, $value, $field) {
+        return parent::resolveChildRouteBinding($childType, $value, $field);
     }
 }

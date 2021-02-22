@@ -41,14 +41,6 @@ class SyncModelObserver {
         }
     }
 
-    public function restored(Model $model) {
-        //
-    }
-
-    public function forceDeleted(Model $model) {
-        //
-    }
-
     protected function getModelName(Model $model) {
         $shortName = (new \ReflectionClass($model))->getShortName();
         return Str::snake($shortName);
@@ -69,5 +61,27 @@ class SyncModelObserver {
         list($modelName, $model, $action, $e) = $params;
         $myException = new \Exception("The model {$modelName} with {$model->id} not synced on {$action}", 0, $e);
         report($myException);
+    }
+
+    public function belongsToManyAttached($relation, $model, $ids) {
+        $modelName = $this->getModelName($model);
+        $relationName = Str::snake($relation);
+        $data = [
+            'id' => $model->id,
+            'relation_ids' => $ids,
+        ];
+        try {
+            $this->publish("model.{$modelName}_{$relationName}.attached", $data);
+        } catch (\Exception $e) {
+            $this->reportException([$modelName, $model, 'attached', $e]);
+        }
+    }
+
+    public function restored(Model $model) {
+        //
+    }
+
+    public function forceDeleted(Model $model) {
+        //
     }
 }

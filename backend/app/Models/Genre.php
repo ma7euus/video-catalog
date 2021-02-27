@@ -24,7 +24,8 @@ class Genre extends Model {
     protected $keyType = 'string';
 
     protected $observables = [
-        'belongsToManyAttached'
+        'belongsToManyAttached',
+        'belongsToManyDetached'
     ];
 
     public function categories() {
@@ -35,7 +36,4 @@ class Genre extends Model {
         return $this->provideFilter(GenreFilter::class);
     }
 
-    public function resolveChildRouteBinding($childType, $value, $field) {
-        return parent::resolveChildRouteBinding($childType, $value, $field);
-    }
 }

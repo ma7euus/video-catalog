@@ -64,6 +64,15 @@ class SyncModelObserver {
     }
 
     public function belongsToManyAttached($relation, $model, $ids) {
+        $this->belongsToManyAction(array_merge(['attached'], func_get_args()));
+    }
+
+    public function belongsToManyDetached($relation, $model, $ids) {
+        $this->belongsToManyAction(array_merge(['attached'], func_get_args()));
+    }
+
+    protected function belongsToManyAction() {
+        list($action, $relation, $model, $ids) = current(func_get_args());
         $modelName = $this->getModelName($model);
         $relationName = Str::snake($relation);
         $data = [
@@ -71,9 +80,9 @@ class SyncModelObserver {
             'relation_ids' => $ids,
         ];
         try {
-            $this->publish("model.{$modelName}_{$relationName}.attached", $data);
+            $this->publish("model.{$modelName}_{$relationName}.{$action}", $data);
         } catch (\Exception $e) {
-            $this->reportException([$modelName, $model, 'attached', $e]);
+            $this->reportException([$modelName, $model, $action, $e]);
         }
     }
 

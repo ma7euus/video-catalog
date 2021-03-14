@@ -29,8 +29,8 @@ class SyncServiceProvider extends ServiceProvider {
             return;
         }
 
-        Genre::observe(SyncModelObserver::class);
         Category::observe(SyncModelObserver::class);
+        Genre::observe(SyncModelObserver::class);
         CastMember::observe(SyncModelObserver::class);
     }
 }

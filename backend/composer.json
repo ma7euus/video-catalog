@@ -13,12 +13,13 @@
         "chelout/laravel-relationship-events": "^1.4",
         "fideloper/proxy": "^4.0",
         "fruitcake/laravel-cors": "^1.0",
-        "laravel/framework": "^6.0",
+        "laravel/framework": "~6.18",
         "laravel/helpers": "^1.2",
         "laravel/tinker": "^1.0",
         "laravel/ui": "^1.0",
         "superbalist/laravel-google-cloud-storage": "^2.2",
-        "tucker-eric/eloquentfilter": "^2.2"
+        "tucker-eric/eloquentfilter": "^2.2",
+        "vizir/laravel-keycloak-web-guard": "^2.3"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.6",

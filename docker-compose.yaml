@@ -27,6 +27,8 @@ services:
     depends_on:
       - db
       - redis
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
 
   nginx:
     build: .docker/nginx
@@ -56,7 +58,6 @@ services:
       - ./.docker/mysql:/docker-entrypoint-initdb.d
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=root
     networks:
       - app-network
 

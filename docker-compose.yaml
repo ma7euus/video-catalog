@@ -39,6 +39,7 @@ services:
       - "8000:80"
     volumes:
       - .:/var/www
+      - .docker/nginx/logs:/var/log/nginx
     networks:
       - app-network
       - network_codeflix-rabbitmq

@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'api', //middleware padrão
         'passwords' => 'users',
     ],
 
@@ -42,9 +42,8 @@ return [
         ],
 
         'api' => [
-            'driver' => 'token',
-            'provider' => 'users',
-            'hash' => false,
+            'driver' => 'keycloak',
+            'provider' => null
         ],
     ],
 

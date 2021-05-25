@@ -1,39 +1,55 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable;
 
-class User extends Authenticatable
-{
-    use Notifiable;
+class User implements Authenticatable {
+    protected $id;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
+    protected $name;
+
+    protected $email;
+
+    protected $token;
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
+     * User constructor.
+     * @param string $id
+     * @param string $name
+     * @param string $email
+     * @param string $token
      */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+    public function __construct(string $id, string $name, string $email, string $token) {
+        $this->id = $id;
+        $this->name = $name;
+        $this->email = $email;
+        $this->token = $token;
+    }
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+
+    public function getAuthIdentifierName() {
+        return $this->email;
+    }
+
+    public function getAuthIdentifier() {
+        return $this->id;
+    }
+
+    public function getAuthPassword() {
+        throw new \Exception('Not implemented!');
+    }
+
+    public function getRememberToken() {
+        throw new \Exception('Not implemented!');
+    }
+
+    public function setRememberToken($value) {
+        throw new \Exception('Not implemented!');
+    }
+
+    public function getRememberTokenName() {
+        throw new \Exception('Not implemented!');
+    }
 }

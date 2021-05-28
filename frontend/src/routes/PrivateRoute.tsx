@@ -17,7 +17,7 @@ const PrivateRoute: React.FC<PrivateProps> = (props) => {
             pathname: "/login",
             state: {from: props.location}
         }}/>;
-    }, []);
+    }, [keycloak]);
     return (
         <Route {...rest} render={render}/>
     );

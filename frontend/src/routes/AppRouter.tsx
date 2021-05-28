@@ -19,7 +19,7 @@ const AppRouter = () => {
                             key,
                             component: route.component!,
                             ...(route.path && {path: route.path}),
-                            ...(route.exact && {path: route.exact}),
+                            ...(route.exact && {exact: route.exact}),
                         };
                         return <Route {...routeParams}/>;
                     }

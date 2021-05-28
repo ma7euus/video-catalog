@@ -9,7 +9,7 @@ const Login: React.FC<LoginProps> = (props) => {
     const {keycloak} = useKeycloak();
     const location = useLocation();
 
-    const { from } = location.state || { from: { pathname: "/" } };
+    const { from }: any = location.state || { from: { pathname: "/" } };
 
     if (keycloak!.authenticated === true) {
         return <Redirect to={from}/>;

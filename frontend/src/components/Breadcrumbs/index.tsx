@@ -1,3 +1,4 @@
+import {useKeycloak} from "@react-keycloak/web";
 import React from 'react';
 import {makeStyles, Theme, createStyles} from '@material-ui/core/styles';
 import Link, {LinkProps} from '@material-ui/core/Link';
@@ -41,6 +42,7 @@ const LinkRouter = (props: LinkRouterProps) => <Link {...props} component={Route
 
 export default function Breadcrumbs() {
     const classes = useStyles();
+    const {keycloak} = useKeycloak();
 
     function makeBreadcrumb(location: Location) {
         const pathnames = location.pathname.split('/').filter((x) => x);
@@ -70,7 +72,7 @@ export default function Breadcrumbs() {
     }
 
     return (
-        <Container>
+        keycloak.authenticated ? <Container>
             <Box paddingTop={2} paddingBottom={1}>
                 <Route>
                     {
@@ -78,6 +80,6 @@ export default function Breadcrumbs() {
                     }
                 </Route>
             </Box>
-        </Container>
+        </Container> : null
     );
 }

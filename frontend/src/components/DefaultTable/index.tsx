@@ -83,7 +83,10 @@ const makeDefaultOptions = (defaultProps?: TableProps | null): MUIDataTableOptio
         />
     },
     ...(defaultProps!.deleteOptions && {
-        onRowsDelete: (rowsDeleted: any[]) => {
+        onRowsDelete: (rowsDeleted: {
+            lookup: { [dataIndex: number]: boolean };
+            data: Array<{ index: number; dataIndex: number }>;
+        }) => {
             defaultProps!
                 .deleteOptions!
                 .prepare!(rowsDeleted as any)

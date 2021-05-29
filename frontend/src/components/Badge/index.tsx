@@ -24,7 +24,7 @@ export const BadgeNo = () => (
 
 type BadgeProps = {
     label: string,
-    color?: PropTypes.Color,
+    color?: Exclude<PropTypes.Color, 'inherit'>
 };
 
 export const Badge = (props: BadgeProps) => (

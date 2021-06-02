@@ -9,7 +9,7 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import routes, {AppRouteProps} from "../../routes";
 import {Link} from "react-router-dom";
-import {useKeycloak} from "@react-keycloak/web";
+import {userHasRealmRole} from "../../hooks/useHasRole";
 
 const listRoutes = {
     'dashboard': 'Dashboard',
@@ -22,14 +22,14 @@ const listRoutes = {
 const menuRoutes = routes.filter(route => Object.keys(listRoutes).includes(route.name));
 
 export const Menu = () => {
-    const {keycloak, initialized} = useKeycloak();
+    const hasVideoCatalogAdmin = userHasRealmRole(process.env.REACT_APP_ADMIN_ROLE);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
     const handleOpen = (event: any) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
 
-    if (!initialized || !keycloak.authenticated) {
+    if (!hasVideoCatalogAdmin) {
         return null;
     }
 

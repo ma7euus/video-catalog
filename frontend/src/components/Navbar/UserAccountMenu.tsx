@@ -7,16 +7,17 @@ import {
 } from "@material-ui/core";
 import {useKeycloak} from "@react-keycloak/web";
 import {AccountBox} from "@material-ui/icons";
+import {userHasRealmRole} from "../../hooks/useHasRole";
 
 const UserAccountMenu = () => {
-    const {keycloak, initialized} = useKeycloak();
+    const hasVideoCatalogAdmin = userHasRealmRole(process.env.REACT_APP_ADMIN_ROLE);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 
     const handleOpen = (event: any) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
 
-    if (!initialized || !keycloak.authenticated) {
+    if (!hasVideoCatalogAdmin) {
         return null;
     }
 

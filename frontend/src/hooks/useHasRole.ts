@@ -1,7 +1,7 @@
 import {useKeycloak} from "@react-keycloak/web";
 import {useMemo} from "react";
 
-export function userHasRealmRole(role: string) {
+export default function userHasRealmRole(role: string) {
     const {keycloak, initialized} = useKeycloak();
 
     return useMemo(() => {

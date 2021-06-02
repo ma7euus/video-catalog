@@ -1,7 +1,6 @@
 import * as React from 'react';
-import {Container} from "react-dom";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {createStyles, Theme, Box, Typography} from "@material-ui/core";
+import {createStyles, Theme, Container, Box, Typography} from "@material-ui/core";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import {Link} from "react-router-dom";
 

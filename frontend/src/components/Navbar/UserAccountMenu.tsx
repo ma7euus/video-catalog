@@ -5,12 +5,11 @@ import {
     Menu as MuiMenu,
     MenuItem
 } from "@material-ui/core";
-import {useKeycloak} from "@react-keycloak/web";
 import {AccountBox} from "@material-ui/icons";
-import {userHasRealmRole} from "../../hooks/useHasRole";
+import userHasRealmRole from "../../hooks/useHasRole";
 
 const UserAccountMenu = () => {
-    const hasVideoCatalogAdmin = userHasRealmRole(process.env.REACT_APP_ADMIN_ROLE);
+    const hasVideoCatalogAdmin = userHasRealmRole('video-catalog-admin');
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Auth\KeycloakGuard;
+use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider {
@@ -28,6 +29,10 @@ class AuthServiceProvider extends ServiceProvider {
                 $app['tymon.jwt'],
                 $app['request']
             );
+        });
+
+        \Gate::define('video-catalog-admin', function (User $user) {
+            return $user->hasRole('video-catalog-admin');
         });
     }
 }

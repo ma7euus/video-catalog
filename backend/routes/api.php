@@ -13,7 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function () {
+Route::group(['namespace' => 'Api', 'middleware' => [
+    'auth:api',
+    'can:video-catalog-admin'
+]], function () {
     $exceptCreateAndEdit = ['except' => ['create', 'edit']];
 
     Route::resource('categories', 'CategoryController', $exceptCreateAndEdit);

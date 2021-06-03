@@ -9,7 +9,7 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import routes, {AppRouteProps} from "../../routes";
 import {Link} from "react-router-dom";
-import userHasRealmRole from "../../hooks/useHasRole";
+import useHasRealmRole from "../../hooks/useHasRole";
 
 const listRoutes = {
     'dashboard': 'Dashboard',
@@ -22,7 +22,7 @@ const listRoutes = {
 const menuRoutes = routes.filter(route => Object.keys(listRoutes).includes(route.name));
 
 export const Menu = () => {
-    const hasVideoCatalogAdmin = userHasRealmRole('video-catalog-admin');
+    const hasVideoCatalogAdmin = useHasRealmRole('video-catalog-admin');
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 

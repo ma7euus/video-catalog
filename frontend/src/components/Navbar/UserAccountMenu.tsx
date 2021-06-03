@@ -6,10 +6,10 @@ import {
     MenuItem
 } from "@material-ui/core";
 import {AccountBox} from "@material-ui/icons";
-import userHasRealmRole from "../../hooks/useHasRole";
+import useHasRealmRole from "../../hooks/useHasRole";
 
 const UserAccountMenu = () => {
-    const hasVideoCatalogAdmin = userHasRealmRole('video-catalog-admin');
+    const hasVideoCatalogAdmin = useHasRealmRole('video-catalog-admin');
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
 

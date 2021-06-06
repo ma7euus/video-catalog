@@ -9,7 +9,7 @@ import {Location} from 'history';
 import routes from "../../routes";
 import RouteParser from 'route-parser';
 import {Box, Container} from "@material-ui/core";
-import useHasRealmRole from "../../hooks/useHasRole";
+import {useHasRealmRole} from "../../hooks/useHasRole";
 
 const breadcrumbNameMap: { [key: string]: string } = {};
 routes.forEach(route => breadcrumbNameMap[route.path as string] = route.label);

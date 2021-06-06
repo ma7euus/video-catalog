@@ -9,7 +9,7 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import routes, {AppRouteProps} from "../../routes";
 import {Link} from "react-router-dom";
-import useHasRealmRole from "../../hooks/useHasRole";
+import {useHasRealmRole} from "../../hooks/useHasRole";
 
 const listRoutes = {
     'dashboard': 'Dashboard',

@@ -2,7 +2,7 @@ import {useKeycloak} from "@react-keycloak/web";
 import * as React from "react";
 import {Redirect, Route, RouteProps} from 'react-router-dom';
 import {RouteComponentProps} from "react-router";
-import useHasRealmRole from "../hooks/useHasRole";
+import {useHasRealmRole} from "../hooks/useHasRole";
 import NotAuthorized from "../pages/NotAuthorized";
 
 interface PrivateProps extends RouteProps {

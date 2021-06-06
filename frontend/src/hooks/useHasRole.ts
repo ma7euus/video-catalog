@@ -1,7 +1,7 @@
 import {useKeycloak} from "@react-keycloak/web";
 import {useMemo} from "react";
 
-const useHasRealmRole = (role: string) => {
+export const useHasRealmRole = (role: string) => {
     const {keycloak, initialized} = useKeycloak();
 
     return useMemo(() => {
@@ -12,4 +12,14 @@ const useHasRealmRole = (role: string) => {
     }, [initialized, keycloak, role]);
 }
 
-export default useHasRealmRole;
+export const useHasClient = (clientName: string) => {
+    const {keycloak, initialized} = useKeycloak();
+
+    return useMemo(() => {
+        if (!initialized || !keycloak.authenticated) {
+            return false;
+        }
+        const countRoles = (keycloak as any).resourceAccess?.[clientName]?.roles?.length > 0;
+        return countRoles;
+    }, [initialized, keycloak, clientName]);
+}
